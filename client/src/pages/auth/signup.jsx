@@ -12,8 +12,11 @@ const initialState = {
 const Signup = () => {
   const [formData, setFormData] = useState(initialState);
 
-  const onSubmit = () => {
-
+  const onSubmit = (e) => {
+    e.preventDefault();
+    // Here you can handle the signup logic, e.g., sending formData to your backend
+    console.log(formData);
+    // Handle signup logic here
   }
   return (
     <div className='mx-auto w-full max-w-md space-y-6'>

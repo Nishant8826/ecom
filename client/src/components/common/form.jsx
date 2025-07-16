@@ -14,7 +14,7 @@ const CommonForm = ({ formControls, formData, setFormData, onSubmit, buttonText 
 
         switch (item.componentType) {
             case 'input':
-                element = <Input name={item.name} type={item.type} placeholder={item.placeholder} key={item.name} value={value} onChange={e => setFormData({ ...formData, [item.name]: e.target.value })} />
+                element = <Input className='rounded-[5px] border-gray-200 placeholder:text-gray-400' name={item.name} type={item.type} placeholder={item.placeholder} key={item.name} value={value} onChange={e => setFormData({ ...formData, [item.name]: e.target.value })} />
                 break;
             case 'select':
                 element = <Select onValueChange={(value) => setFormData({ ...formData, [item.name]: value })} value={value}>
@@ -29,11 +29,11 @@ const CommonForm = ({ formControls, formData, setFormData, onSubmit, buttonText 
                 </Select>
                 break;
             case 'textarea':
-                element = <Textarea value={value} name={item.name} placeholder={item.placeholder} id={item.id} onChange={e => setFormData({ ...formData, [item.name]: e.target.value })} />
+                element = <Textarea className='rounded-[5px] border-gray-200 placeholder:text-gray-400' value={value} name={item.name} placeholder={item.placeholder} id={item.id} onChange={e => setFormData({ ...formData, [item.name]: e.target.value })} />
                 break;
 
             default:
-                element = <Input name={item.name} type={item.type} placeholder={item.placeholder} key={item.name} value={value} onChange={e => setFormData({ ...formData, [item.name]: e.target.value })} />
+                element = <Input className='rounded-[5px] border-gray-200 placeholder:text-gray-400' name={item.name} type={item.type} placeholder={item.placeholder} key={item.name} value={value} onChange={e => setFormData({ ...formData, [item.name]: e.target.value })} />
                 break;
         }
 
@@ -52,7 +52,7 @@ const CommonForm = ({ formControls, formData, setFormData, onSubmit, buttonText 
                             }
                         </div>)
                 }
-                <Button className='mt-2 w-full' type='submit'>{buttonText}</Button>
+                <Button className='mt-2 w-full bg-black text-white rounded-[5px] hover:bg-black/80' type='submit'>{buttonText}</Button>
             </div>
         </form>
     )
