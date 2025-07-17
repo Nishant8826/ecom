@@ -3,7 +3,7 @@ import axios from "axios";
 
 const initialState = {
     isAuthenticated: false,
-    isLoading: false,
+    isLoading: true,
     user: null
 }
 
@@ -25,6 +25,20 @@ export const loginUser = createAsyncThunk("/auth/login", async (formData, { reje
     }
 });
 
+export const checkAuth = createAsyncThunk("/auth/check-auth", async () => {
+    try {
+        const response = await axios.get("http://localhost:5000/api/v1/auth/check-auth", {
+            withCredentials: true,
+            headers: {
+                'Cache-Control': 'no-cache,no-store,must-revalidate,proxy-revalidate',
+            }
+        });
+        return response.data;
+    } catch (error) {
+        return error.response.data;
+    }
+});
+
 const authSlice = createSlice({
     name: 'auth',
     initialState,
@@ -39,6 +53,26 @@ const authSlice = createSlice({
             state.isAuthenticated = false;
             state.user = null;
         }).addCase(registerUser.rejected, (state) => {
+            state.isLoading = false;
+            state.isAuthenticated = false;
+            state.user = null;
+        }).addCase(loginUser.pending, (state) => {
+            state.isLoading = true;
+        }).addCase(loginUser.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.isAuthenticated = action.payload.success;
+            state.user = action.payload.user ? action.payload.user : null;
+        }).addCase(loginUser.rejected, (state) => {
+            state.isLoading = false;
+            state.isAuthenticated = false;
+            state.user = null;
+        }).addCase(checkAuth.pending, (state) => {
+            state.isLoading = true;
+        }).addCase(checkAuth.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.isAuthenticated = action.payload.success;
+            state.user = action.payload.user ? action.payload.user : null;
+        }).addCase(checkAuth.rejected, (state) => {
             state.isLoading = false;
             state.isAuthenticated = false;
             state.user = null;

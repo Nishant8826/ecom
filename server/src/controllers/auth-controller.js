@@ -19,26 +19,35 @@ const signup = TryCatch(async (req, res, next) => {
 });
 
 // login controller
-const login = TryCatch(async (req, res) => {
+const login = TryCatch(async (req, res, next) => {
     const { email, password } = req.body;
-    if(!email || !password) return next(new ErrorClass("Please prodice all required fields",200));
+    if (!email || !password) return next(new ErrorClass("Please provide all required fields", 200));
     const user = await userModel.findOne({ email });
     if (!user) return next(new ErrorClass("User not found", 404));
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return next(new ErrorClass("Invalid credentials", 401));
+    if (!isMatch) return next(new ErrorClass("Password is incorrect", 401));
     const token = await jwt.sign(user.toObject(), 'ECOMMERCE_SECRET', { expiresIn: '1h' });
-    res.status(200).json({ message: 'User logged in successfully', user: { email }, token });
+    res.cookie('token', token, { httpOnly: true, secure: false }).json({ success: true, message: 'User logged in successfully', user });
 });
 
 //logout controller
 const logout = TryCatch(async (req, res) => {
-    // Here you would typically handle the logout logic, such as invalidating the user's session
-    console.log('User logged out');
-
-    res.status(200).json({ message: 'User logged out successfully' });
+    res.clearCookie('token').json({ success: true, message: 'User logged out successfully' });
 });
 
-// auth controller 
+// auth controller
+const authMiddleware = async (req, res, next) => {
+    try {
+        const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
+        if (!token) return next(new ErrorClass("You are not authenticated", 401));
+        const decoded = await jwt.verify(token, 'ECOMMERCE_SECRET');
+        if (!decoded) return next(new ErrorClass("Invalid token", 401));
+        req.user = decoded;
+        next();
+    } catch (error) {
+        return next(new ErrorClass("Authentication failed", 401));
+    }
+};
 
 
-module.exports = { signup, login, logout };
+module.exports = { signup, login, logout, authMiddleware };

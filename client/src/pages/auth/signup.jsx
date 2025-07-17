@@ -31,7 +31,6 @@ const Signup = () => {
         navigation('/auth/login');
         setFormData(initialState);
       } else {
-        console.log(data)
         toast({
           variant: "destructive",
           title: 'Registration Failed',

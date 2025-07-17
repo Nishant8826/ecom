@@ -1,12 +1,15 @@
 import { Navigate, useLocation } from "react-router-dom"
 
-const ProtectedRoute = ({ isAuthentication, user, children }) => {
+const ProtectedRoute = ({ isAuthenticated, user, children }) => {
 
     const location = useLocation();
 
-    if (!isAuthentication && !(location.pathname.includes('login') || location.pathname.includes('signup'))) return <Navigate to={'/auth/login'} />
+    console.log(location.pathname, isAuthenticated);
+    
 
-    if (isAuthentication && (location.pathname.includes('login') || location.pathname.includes('signup'))) {
+    if (!isAuthenticated && !(location.pathname.includes('login') || location.pathname.includes('signup'))) return <Navigate to={'/auth/login'} />
+
+    if (isAuthenticated && (location.pathname.includes('login') || location.pathname.includes('signup'))) {
         if (user?.role == 'admin') {
             return <Navigate to={'/admin/dashboard'} />
         } else {
@@ -14,9 +17,9 @@ const ProtectedRoute = ({ isAuthentication, user, children }) => {
         }
     }
 
-    if (isAuthentication && user?.role !== 'admin' && location.pathname.includes('admin')) return <Navigate to={'/unauth'} />
+    if (isAuthenticated && user?.role !== 'admin' && location.pathname.includes('admin')) return <Navigate to={'/unauth'} />
 
-    if (isAuthentication && user?.role === 'admin' && location.pathname.includes('shop')) return <Navigate to={'/admin/dashboard'} />
+    if (isAuthenticated && user?.role === 'admin' && location.pathname.includes('shop')) return <Navigate to={'/admin/dashboard'} />
 
 
     return <div>{children}</div>
