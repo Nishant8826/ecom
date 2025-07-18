@@ -7,6 +7,7 @@ const errorHandler = require('./src/middleware/errorHandler');
 const app = express();
 
 const authRouter = require('./src/routes/auth-routes.js');
+const adminRoutes = require('./src/routes/admin-routes.js');
 
 
 Connection();
@@ -31,6 +32,7 @@ app.use(express.json());
 // routes
 
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/admin', adminRoutes);
 
 app.use(errorHandler);
 app.listen(PORT, () => {
