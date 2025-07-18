@@ -57,7 +57,7 @@ const updateProduct = TryCatch(async (req, res, next) => {
     findProduct.image = image || findProduct.image;
 
     await findProduct.save();
-    res.status(200).json({ success: true, data: findProduct });
+    res.status(200).json({ success: true, data: findProduct, message: "Product updated successfully" });
 });
 
 

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import React, { Fragment, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { addNewProduct, editProduct, fetchAllProducts } from '@/store/adminProductSlice';
+import { addNewProduct, deleteProduct, editProduct, fetchAllProducts } from '@/store/adminProductSlice';
 import { useToast } from '@/hooks/use-toast';
 import AdminProductTile from '@/components/admin/adminProductTile';
 
@@ -46,7 +46,7 @@ const AdminProducts = () => {
           setImageFile(null);
           setUploadedImageUrl("");
           toast({
-            title: 'Product Added Successfully',
+            title: result?.payload?.message || 'Product Added Successfully',
             variant: 'success'
           });
         }
@@ -60,7 +60,7 @@ const AdminProducts = () => {
           setUploadedImageUrl("");
           setCurrentEditedId(null);
           toast({
-            title: 'Product Updated Successfully',
+            title: result?.payload?.message || 'Product Updated Successfully',
             variant: 'success'
           });
         }
@@ -71,11 +71,22 @@ const AdminProducts = () => {
     return Object.keys(formData).map(key => formData[key] !== "").every((item) => item);
   }
 
+  const handleDeleteProduct = (productId) => {
+    dispatch(deleteProduct(productId)).then((result) => {
+      if (result?.payload?.success) {
+        dispatch(fetchAllProducts());
+        toast({
+          title: result?.payload?.message || 'Product Deleted Successfully',
+          variant: 'success'
+        });
+      }
+    });
+  }
+
   useEffect(() => {
     dispatch(fetchAllProducts());
   }, [dispatch]);
 
-  console.log(currentEditedId, "currentEditedId");
 
   return (
     <Fragment>
@@ -88,7 +99,7 @@ const AdminProducts = () => {
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
         {products && products.length > 0
           ? products.map((item) => (
-            <AdminProductTile product={item} key={item._id} setCurrentEditedId={setCurrentEditedId} setFormData={setFormData} setOpenCreateProductsDialog={setOpenCreateProductsDialog} />
+            <AdminProductTile product={item} key={item._id} setCurrentEditedId={setCurrentEditedId} setFormData={setFormData} setOpenCreateProductsDialog={setOpenCreateProductsDialog} handleDeleteProduct={handleDeleteProduct} />
           ))
           : null}
       </div>
