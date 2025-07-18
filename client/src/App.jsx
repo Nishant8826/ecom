@@ -33,7 +33,6 @@ function App() {
     dispatch(checkAuth());
   }, [dispatch]);
 
-  console.log("App isLoading:", isLoading);
 
   if (isLoading) {
     return <Skeleton className="h-[20px] w-[100px] rounded-full" />
