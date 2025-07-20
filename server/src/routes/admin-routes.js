@@ -5,10 +5,10 @@ const multer = require('multer');
 const upload = multer({ storage: new multer.memoryStorage() });
 
 
-adminRoutes.post('/product/image-upload', upload.single('image'), handleImageUpload);
-adminRoutes.post('/product/add', addProduct);
-adminRoutes.get('/product/get', fetchAllProducts);
-adminRoutes.put('/product/edit/:id', updateProduct);
-adminRoutes.delete('/product/delete/:id', deleteProduct);
+adminRoutes.post('/image-upload', upload.single('image'), handleImageUpload);
+adminRoutes.post('/add', addProduct);
+adminRoutes.get('/get', fetchAllProducts);
+adminRoutes.put('/edit/:id', updateProduct);
+adminRoutes.delete('/delete/:id', deleteProduct);
 
 module.exports = adminRoutes;
