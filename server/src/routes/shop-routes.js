@@ -1,8 +1,8 @@
 const express = require('express');
-const { fetchAllProducts } = require('../controllers/admin-controller');
+const { getAllfilteredProducts } = require('../controllers/shop-controller');
 const shopRoutes = express.Router();
 
-shopRoutes.get('/get', fetchAllProducts);
+shopRoutes.get('/get', getAllfilteredProducts);
 
 
 module.exports = shopRoutes;

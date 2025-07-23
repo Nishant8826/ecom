@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import './App.css'
 import AuthLayout from './components/auth/layout'
 import Login from './pages/auth/login'
@@ -42,6 +42,8 @@ function App() {
 
     <BrowserRouter>
       <Routes>
+
+        <Route path='' element={<Navigate to={'/auth/login'}/>}/>
 
         <Route path='/auth' element={<ProtectedRoute isAuthenticated={isAuthenticated} user={user}><AuthLayout /></ProtectedRoute>}>
           <Route path='login' element={<Login />} />

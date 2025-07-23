@@ -19,6 +19,7 @@ function AdminProductTile({ product, setCurrentEditedId, setFormData, setOpenCre
                         ) : null}
                     </div>
                 </CardContent>
+                
                 <CardFooter className="flex justify-between items-center">
                     <Button onClick={() => {
                         setCurrentEditedId(product._id);
