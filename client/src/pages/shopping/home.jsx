@@ -11,6 +11,7 @@ import ShoppingProductTile from "@/components/shopping/product-tile";
 import ProductDetailsDialog from "@/components/shopping/product-details";
 import { useToast } from "@/hooks/use-toast";
 import { fetchAllFilteredProducts, fetchProductDetail } from "@/store/shopProductSlice";
+import { addCart, fetchCart } from "@/store/cartSlice";
 
 
 const categoriesWithIcon = [
@@ -47,10 +48,10 @@ function ShoppingHome() {
   }
 
   const handleAddtoCart = (getCurrentProductId) => {
-    dispatch(addToCart({ userId: user?.id, productId: getCurrentProductId, quantity: 1 }))
+    dispatch(addCart({ userId: user?._id, productId: getCurrentProductId, quantity: 1 }))
       .then((data) => {
         if (data?.payload?.success) {
-          dispatch(fetchCartItems(user?.id));
+          dispatch(fetchCart({ userId: user?._id }));
           toast({
             title: "Product is added to cart",
           });
