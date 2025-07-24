@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
-import { Dialog, DialogContent } from "../ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 import { Separator } from "../ui/separator";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -43,7 +43,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                 </div>
                 <div>
                     <div>
-                        <h1 className="text-3xl font-extrabold">{productDetails?.title}</h1>
+                        <DialogTitle className="text-3xl font-extrabold">{productDetails?.title}</DialogTitle>
                         <p className="text-muted-foreground text-2xl mb-5 mt-4">{productDetails?.description}</p>
                     </div>
                     <div className="flex items-center justify-between">
