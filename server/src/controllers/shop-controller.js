@@ -43,7 +43,14 @@ const getAllfilteredProducts = TryCatch(async (req, res, next) => {
 
     const products = await productModel.find(filters).sort(sort);
     res.status(200).json({ success: true, data: products });
+});
+
+
+const getProductDetails = TryCatch(async (req, res, next) => {
+    const { id } = req.params;
+    const productDetail = await productModel.findById(id);
+    res.status(200).json({ success: true, data: productDetail });
 })
 
 
-module.exports = { getAllfilteredProducts }
+module.exports = { getAllfilteredProducts, getProductDetails };

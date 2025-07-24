@@ -1,9 +1,10 @@
 import ProductFilter from '@/components/shopping/filter'
+import ProductDetailsDialog from '@/components/shopping/product-details'
 import ShoppingProductTile from '@/components/shopping/product-tile'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { sortOptions } from '@/config'
-import { fetchAllFilteredProducts } from '@/store/shopProductSlice'
+import { fetchAllFilteredProducts, fetchProductDetail } from '@/store/shopProductSlice'
 import { ArrowUpDownIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -15,19 +16,20 @@ const createSearchParamsHelper = (filterParams) => {
     if (Array.isArray(value) && value.length > 0) {
       const queryStr = value.join(',');
 
-      queryParams.push(`${item}=${encodeURIComponent(queryStr)}`);
+      queryParams.push(`${item}=${queryStr}`);
     }
   }
-
   return queryParams.join('&');
 }
 
 const ShoppingListing = () => {
   const dispatch = useDispatch();
-  const { products } = useSelector(state => state.shoppingProduct)
+  const { products, productDetails } = useSelector(state => state.shoppingProduct)
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+
 
   const handleSort = (value) => {
     setSort(value)
@@ -53,6 +55,11 @@ const ShoppingListing = () => {
     setFilters(copyFilter);
     sessionStorage.setItem('filters', JSON.stringify(copyFilter));
 
+  }
+
+  const handleGetProductDetails = (productId) => {
+    dispatch(fetchProductDetail(productId))
+    setOpenDetailsDialog(true);
   }
 
   useEffect(() => {
@@ -112,7 +119,7 @@ const ShoppingListing = () => {
           {products && products.length > 0
             ? products.map((item) => (
               <ShoppingProductTile
-                // handleGetProductDetails={handleGetProductDetails}
+                handleGetProductDetails={handleGetProductDetails}
                 product={item}
               // handleAddtoCart={handleAddtoCart}
               />
@@ -120,11 +127,11 @@ const ShoppingListing = () => {
             : null}
         </div>
       </div>
-      {/* <ProductDetailsDialog
+      <ProductDetailsDialog
         open={openDetailsDialog}
         setOpen={setOpenDetailsDialog}
         productDetails={productDetails}
-      /> */}
+      />
     </div>
   )
 }
