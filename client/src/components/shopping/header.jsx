@@ -1,5 +1,5 @@
 import { HousePlug, LogOut, Menu, ShoppingCart, UserCog } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet'
 import { Button } from '../ui/button'
@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { logout } from '@/store/authSlice'
 import { Avatar, AvatarFallback } from '../ui/avatar'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu'
+import UserCartWrapper from './cart-wrapper'
+import { fetchCart } from '@/store/cartSlice'
 
 
 function MenuItems() {
@@ -17,7 +19,7 @@ function MenuItems() {
 
   function handleNavigate(getCurrentMenuItem) {
 
-     navigate(getCurrentMenuItem.path);
+    navigate(getCurrentMenuItem.path);
   }
 
 
@@ -40,7 +42,7 @@ function MenuItems() {
 
 function HeaderRightContent() {
   const { user } = useSelector((state) => state.auth);
-  // const { cartItems } = useSelector((state) => state.shopCart);
+  const { cartItems } = useSelector((state) => state.shopCart);
   const [openCartSheet, setOpenCartSheet] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -49,29 +51,21 @@ function HeaderRightContent() {
     dispatch(logout());
   }
 
-  // useEffect(() => {
-  //   dispatch(fetchCartItems(user?.id));
-  // }, [dispatch]);
-
+  useEffect(() => {
+    dispatch(fetchCart({ userId: user?._id }));
+  }, [dispatch]);
 
   return (
     <div className="flex lg:items-center lg:flex-row flex-col gap-4">
       <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
-        <Button variant="outline" size="icon" className="relative" >
+        <Button variant="outline" size="icon" className="relative" onClick={() => setOpenCartSheet(true)}>
           <ShoppingCart className="w-6 h-6" />
-          {/* <span className="absolute top-[-5px] right-[2px] font-bold text-sm">
-            {cartItems?.items?.length || 0}
-          </span> */}
-          <span className="sr-only">User cart</span>
+          {cartItems?.items?.length > 0 && (
+            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full">{cartItems.items.length}</span>
+          )}
         </Button>
-        {/* <UserCartWrapper
-          setOpenCartSheet={setOpenCartSheet}
-          cartItems={
-            cartItems && cartItems.items && cartItems.items.length > 0
-              ? cartItems.items
-              : []
-          }
-        /> */}
+        <UserCartWrapper setOpenCartSheet={setOpenCartSheet} cartItems={cartItems && cartItems.items && cartItems.items.length > 0 ? cartItems.items : []}
+        />
       </Sheet>
 
       <DropdownMenu>

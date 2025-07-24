@@ -1,10 +1,9 @@
-import { useDispatch } from "react-redux"
 import { Card, CardContent, CardFooter } from "../ui/card"
 import { Badge } from "../ui/badge"
 import { Button } from "../ui/button"
 import { brandOptionsMap, categoryOptionsMap } from "@/config"
 
-const ShoppingProductTile = ({ product, handleGetProductDetails }) => {
+const ShoppingProductTile = ({ product, handleGetProductDetails, handleAddtoCart }) => {
 
 
 
@@ -50,9 +49,7 @@ const ShoppingProductTile = ({ product, handleGetProductDetails }) => {
         </CardContent>
       </div>
       <CardFooter>
-        <Button
-          className="w-full"
-        >
+        <Button className="w-full" onClick={()=>handleAddtoCart(product?._id)}>
           Add to cart
         </Button>
       </CardFooter>

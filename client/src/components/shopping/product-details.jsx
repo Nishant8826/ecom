@@ -5,13 +5,35 @@ import { Separator } from "../ui/separator";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Star } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { useToast } from "@/hooks/use-toast";
+import { addCart, fetchCart } from "@/store/cartSlice";
 
 function ProductDetailsDialog({ open, setOpen, productDetails }) {
+    const { user } = useSelector(state => state.auth);
+    const dispatch = useDispatch();
+    const { toast } = useToast();
+
     function handleDialogClose() {
         setOpen(false);
     }
 
-    console.log('open>>>', open)
+    const handleAddtoCart = (productId) => {
+        dispatch(addCart({ userId: user?._id, productId, quantity: 1 })).then((response) => {
+            if (response?.payload?.success) {
+                dispatch(fetchCart({ userId: user?._id }))
+                toast({
+                    variant: 'success',
+                    title: 'Product is Added to Cart successfully'
+                })
+            }
+        }).catch((err) => {
+            toast({
+                variant: 'destructive',
+                title: err.message ? err.message : 'Error Occured'
+            })
+        })
+    }
 
     return (
         <Dialog open={open} onOpenChange={handleDialogClose}>
@@ -19,7 +41,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                 <div className="relative overflow-hidden rounded-lg">
                     <img src={productDetails?.image} alt={productDetails?.title} width={600} height={600} className="aspect-square w-full object-cover" />
                 </div>
-                <div className="">
+                <div>
                     <div>
                         <h1 className="text-3xl font-extrabold">{productDetails?.title}</h1>
                         <p className="text-muted-foreground text-2xl mb-5 mt-4">{productDetails?.description}</p>
@@ -46,7 +68,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                         {productDetails?.totalStock === 0 ? (
                             <Button className="w-full opacity-60 cursor-not-allowed">Out of Stock</Button>
                         ) : (
-                            <Button className="w-full">Add to Cart</Button>
+                            <Button className="w-full" onClick={() => handleAddtoCart(productDetails?._id)}>Add to Cart</Button>
                         )}
                     </div>
                     <Separator />
@@ -81,7 +103,7 @@ function ProductDetailsDialog({ open, setOpen, productDetails }) {
                                 </div>
                             </div>
 
-                            
+
                             {/* )) */}
                             {/* ) : ( */}
                             {/* <h1>No Reviews</h1> */}
