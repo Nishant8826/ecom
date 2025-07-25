@@ -29,7 +29,7 @@ const adminSidebarMenuItems = [
   },
 ];
 
-function MenuItems({ setOpen }) {
+const MenuItems = ({ setOpen }) => {
   const navigate = useNavigate();
 
   return (
@@ -51,7 +51,7 @@ function MenuItems({ setOpen }) {
   );
 }
 
-function AdminSideBar({ open, setOpen }) {
+const AdminSideBar = ({ open, setOpen }) => {
   const navigate = useNavigate();
 
   return (

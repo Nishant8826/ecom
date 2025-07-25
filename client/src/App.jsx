@@ -21,7 +21,7 @@ import { checkAuth } from './store/authSlice'
 import { Skeleton } from './components/ui/skeleton'
 import ShoppingHome from './pages/shopping/home'
 
-function App() {
+const App = () => {
 
   const { isAuthenticated, user, isLoading } = useSelector((state) => state.auth);
 
@@ -43,7 +43,7 @@ function App() {
     <BrowserRouter>
       <Routes>
 
-        <Route path='' element={<Navigate to={'/auth/login'}/>}/>
+        <Route path='' element={<Navigate to={'/auth/login'} />} />
 
         <Route path='/auth' element={<ProtectedRoute isAuthenticated={isAuthenticated} user={user}><AuthLayout /></ProtectedRoute>}>
           <Route path='login' element={<Login />} />

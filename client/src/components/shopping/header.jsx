@@ -13,11 +13,11 @@ import UserCartWrapper from './cart-wrapper'
 import { fetchCart } from '@/store/cartSlice'
 
 
-function MenuItems() {
+const MenuItems = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  function handleNavigate(getCurrentMenuItem) {
+  const handleNavigate = (getCurrentMenuItem) => {
 
     navigate(getCurrentMenuItem.path);
   }
@@ -40,14 +40,14 @@ function MenuItems() {
 
 
 
-function HeaderRightContent() {
+const HeaderRightContent = () => {
   const { user } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
   const [openCartSheet, setOpenCartSheet] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  function handleLogout() {
+  const handleLogout = () => {
     dispatch(logout());
   }
 

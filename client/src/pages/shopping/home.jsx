@@ -31,7 +31,7 @@ const brandsWithIcon = [
   { id: "h&m", label: "H&M", icon: Heater },
 ];
 
-function ShoppingHome() {
+const ShoppingHome = () => {
   const slides = [bannerOne, bannerTwo, bannerThree];
   const [currentSlide, setCurrentSlide] = useState(0);
   const { products, productDetails } = useSelector((state) => state.shoppingProduct);

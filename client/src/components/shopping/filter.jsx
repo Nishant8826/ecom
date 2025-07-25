@@ -3,7 +3,7 @@ import { Fragment } from "react";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 
-function ProductFilter({ filters, setFilters, handleFilter }) {
+const ProductFilter = ({ filters, setFilters, handleFilter }) => {
 
   return (
     <div className="bg-background rounded-lg shadow-sm">

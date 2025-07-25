@@ -9,12 +9,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast";
 import { addCart, fetchCart } from "@/store/cartSlice";
 
-function ProductDetailsDialog({ open, setOpen, productDetails }) {
+const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
     const { user } = useSelector(state => state.auth);
     const dispatch = useDispatch();
     const { toast } = useToast();
 
-    function handleDialogClose() {
+    const handleDialogClose = () => {
         setOpen(false);
     }
 

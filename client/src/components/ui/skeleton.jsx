@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils"
 
-function Skeleton({
+const Skeleton = ({
   className,
   ...props
-}) {
+}) => {
   return (<div className={cn("animate-pulse rounded-md bg-muted", className)} {...props} />);
 }
 

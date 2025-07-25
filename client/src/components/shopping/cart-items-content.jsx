@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteCart, updateCart } from "@/store/cartSlice";
 import { useToast } from "@/hooks/use-toast";
 
-function UserCartItemsContent({ cartItem }) {
+const UserCartItemsContent = ({ cartItem }) => {
     const { user } = useSelector(state => state.auth);
     const { cartItems } = useSelector(state => state.shopCart);
     const dispatch = useDispatch();

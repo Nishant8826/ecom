@@ -7,7 +7,7 @@ import { Skeleton } from "../ui/skeleton";
 import { baseUrl } from "@/config";
 import axios from "axios";
 
-function ProductImageUpload({
+const ProductImageUpload = ({
     imageFile,
     setImageFile,
     uploadedImageUrl,
@@ -15,34 +15,34 @@ function ProductImageUpload({
     imageLoadingState,
     setImageLoadingState,
     currentEditedId
-}) {
+}) => {
     const inputRef = useRef(null);
 
 
-    function handleImageFileChange(event) {
+    const handleImageFileChange = (event) => {
         console.log(event.target.files, "event.target.files");
         const selectedFile = event.target.files?.[0];
         if (selectedFile) setImageFile(selectedFile);
     }
 
-    function handleDragOver(event) {
+    const handleDragOver = (event) => {
         event.preventDefault();
     }
 
-    function handleDrop(event) {
+    const handleDrop = (event) => {
         event.preventDefault();
         const droppedFile = event.dataTransfer.files?.[0];
         if (droppedFile) setImageFile(droppedFile);
     }
 
-    function handleRemoveImage() {
+    const handleRemoveImage = () => {
         setImageFile(null);
         if (inputRef.current) {
             inputRef.current.value = "";
         }
     }
 
-    async function uploadImageToCloudinary() {
+    const uploadImageToCloudinary = async() => {
         setImageLoadingState(true);
         const formData = new FormData();
         formData.append("image", imageFile);

@@ -2,7 +2,7 @@ import { Button } from "../ui/button";
 import { SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 import UserCartItemsContent from "./cart-items-content";
 
-function UserCartWrapper({ cartItems, setOpenCartSheet }) {
+const UserCartWrapper = ({ cartItems, setOpenCartSheet }) => {
 
     let totalCartAmount = 0;
 
