@@ -1,8 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 import UserCartItemsContent from "./cart-items-content";
 
 const UserCartWrapper = ({ cartItems, setOpenCartSheet }) => {
+
+    const navigate = useNavigate();
 
     let totalCartAmount = 0;
 
@@ -25,7 +28,10 @@ const UserCartWrapper = ({ cartItems, setOpenCartSheet }) => {
                     <span className="font-bold">${totalCartAmount}</span>
                 </div>
             </div>
-            <Button onClick={() => setOpenCartSheet(false)} className="w-full mt-6" >
+            <Button onClick={() => {
+                navigate('/shop/checkout')
+                setOpenCartSheet(false);
+            }} className="w-full mt-6" >
                 Checkout
             </Button>
         </SheetContent>

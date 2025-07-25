@@ -10,6 +10,7 @@ const authRouter = require('./src/routes/auth-routes.js');
 const adminRoutes = require('./src/routes/admin-routes.js');
 const shopRoutes = require('./src/routes/shop-routes.js');
 const cartRoutes = require('./src/routes/cart-routes.js');
+const addressRouter = require('./src/routes/address-routes.js');
 
 
 Connection();
@@ -32,11 +33,11 @@ app.use(cookieParser());
 app.use(express.json());
 
 // routes
-
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/admin/product', adminRoutes);
 app.use('/api/v1/shop/product', shopRoutes);
 app.use('/api/v1/shop/cart', cartRoutes);
+app.use('/api/v1/address', addressRouter);
 
 app.use(errorHandler);
 app.listen(PORT, () => {
