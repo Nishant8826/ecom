@@ -20,6 +20,8 @@ import { useEffect } from 'react'
 import { checkAuth } from './store/authSlice'
 import { Skeleton } from './components/ui/skeleton'
 import ShoppingHome from './pages/shopping/home'
+import StripeSuccess from './pages/shopping/success'
+import StripeCancel from './pages/shopping/cancel'
 
 const App = () => {
 
@@ -60,6 +62,8 @@ const App = () => {
         <Route path='/shop' element={<ProtectedRoute isAuthenticated={isAuthenticated} user={user}><ShoppingLayout /></ProtectedRoute>}>
           <Route path='account' element={<ShoppingAccount />} />
           <Route path='checkout' element={<ShoppingCheckout />} />
+          <Route path='success' element={<StripeSuccess />} />
+          <Route path='cancel' element={<StripeCancel />} />
           <Route path='listing' element={<ShoppingListing />} />
           <Route path='home' element={<ShoppingHome />} />
         </Route>

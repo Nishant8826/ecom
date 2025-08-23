@@ -1,7 +1,7 @@
-const productModel = require("../models/Product");
-const { imageUploadUtil } = require("../utils/cloudinary");
-const TryCatch = require("../utils/tryCatch");
-const ErrorClass = require("../utils/ErrorClass");
+const productModel = require("../../models/Product");
+const { imageUploadUtil } = require("../../config/cloudinary");
+const TryCatch = require("../../utils/tryCatch");
+const ErrorClass = require("../../utils/ErrorClass");
 
 
 const handleImageUpload = TryCatch(async (req, res, next) => {

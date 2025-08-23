@@ -1,9 +1,11 @@
 const express = require('express');
-const { handleImageUpload, fetchAllProducts, addProduct, updateProduct, deleteProduct } = require('../controllers/admin-controller');
+const { handleImageUpload, fetchAllProducts, addProduct, updateProduct, deleteProduct } = require('../../controllers/admin/admin');
 const adminRoutes = express.Router();
 const multer = require('multer');
+const { authMiddleware, roleMiddleware } = require('../../middleware/auth');
 const upload = multer({ storage: new multer.memoryStorage() });
 
+adminRoutes.use(authMiddleware,roleMiddleware('admin'))
 
 adminRoutes.post('/image-upload', upload.single('image'), handleImageUpload);
 adminRoutes.post('/add', addProduct);

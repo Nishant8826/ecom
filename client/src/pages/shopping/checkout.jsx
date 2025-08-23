@@ -4,6 +4,9 @@ import { useState } from "react";
 import Address from "@/components/shopping/address";
 import UserCartItemsContent from "@/components/shopping/cart-items-content";
 import { Button } from "@/components/ui/button";
+import { loadStripe } from "@stripe/stripe-js";
+import axios from "axios";
+import { baseUrl } from "@/config";
 
 function ShoppingCheckout() {
   const { cartItems } = useSelector((state) => state.shopCart);
@@ -15,6 +18,15 @@ function ShoppingCheckout() {
     const price = item.salePrice > 0 ? item.salePrice : item.price;
     totalCartAmount = totalCartAmount + (price * item.quantity)
   })
+
+  const handlePayment = async () => {
+
+    const stripe = await loadStripe(import.meta.env.VITE_STRIPE_PK);
+    const response = await axios.post(`${baseUrl}/order/create-checkout-session`, cartItems, { withCredentials: true });
+    const stripeSome = await stripe.redirectToCheckout({ sessionId: response?.data?.id });
+
+
+  }
 
   return (
     <div className="flex flex-col">
@@ -36,10 +48,8 @@ function ShoppingCheckout() {
             </div>
           </div>
           <div className="mt-4 w-full">
-            <Button className="w-full">
-              {isPaymentStart
-                ? "Processing Paypal Payment..."
-                : "Checkout with Paypal"}
+            <Button onClick={handlePayment} className="w-full">
+              {isPaymentStart ? "Processing Paypal Payment..." : "Checkout with Paypal"}
             </Button>
           </div>
         </div>
