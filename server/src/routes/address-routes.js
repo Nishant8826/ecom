@@ -3,7 +3,7 @@ const { addAddress, fetchUserAddress, updateAddress, deleteAddress } = require('
 const addressRouter = express.Router();
 
 
-addressRouter.post('/add', addAddress);
+// addressRouter.post('/add', addAddress);
 addressRouter.get('/get/:userId', fetchUserAddress);
 addressRouter.put('/update/:userId/:addressId', updateAddress);
 addressRouter.delete('/delete/:userId/:addressId', deleteAddress);
