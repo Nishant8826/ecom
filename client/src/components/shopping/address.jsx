@@ -29,10 +29,7 @@ const Address = () => {
 
         if (addressList && addressList.length >= 3 && currentEditedId === null) {
             setFormData(initialAddressFormData);
-            toast({
-                title: "You can add max 3 addresses",
-                variant: "destructive",
-            });
+            toast({ title: "You can add max 3 addresses", variant: "destructive", });
             return;
         }
 
@@ -40,9 +37,7 @@ const Address = () => {
             dispatch(updateAddress({ userId: user?._id, addressId: currentEditedId, formData })).then((res) => {
                 if (res.payload.success) {
                     dispatch(fetchUserAddress(user?._id))
-                    toast({
-                        title: 'Address updated successfully!',
-                    })
+                    toast({ title: 'Address updated successfully!', })
                     setFormData(initialAddressFormData)
                     setCurrentEditedId(null);
                 }
@@ -50,9 +45,7 @@ const Address = () => {
             : dispatch(addAddress({ ...formData, userId: user?._id })).then((res) => {
                 if (res?.payload?.success) {
                     dispatch(fetchUserAddress(user?._id))
-                    toast({
-                        title: 'Address added successfully!',
-                    })
+                    toast({ title: 'Address added successfully!', })
                     setFormData(initialAddressFormData)
                 }
             })
@@ -91,7 +84,7 @@ const Address = () => {
         <Card>
             <div className="mb-5 p-3 grid grid-cols-1 sm:grid-cols-2  gap-2">
                 {addressList && addressList.length > 0 ? addressList.map((addressItem) => (
-                    <AddressCard handleDeleteAddress={handleDeleteAddress} addressInfo={addressItem} handleEditAddress={handleEditAddress} />
+                    <AddressCard key={addressItem._id} handleDeleteAddress={handleDeleteAddress} addressInfo={addressItem} handleEditAddress={handleEditAddress} />
                 ))
                     : null}
             </div>

@@ -86,6 +86,7 @@ const ShoppingHome = () => {
     dispatch(fetchAllFilteredProducts({ filterParams: {}, sortBy: "price-lowtohigh" }));
   }, [dispatch]);
 
+
   return (
     <div className="flex flex-col min-h-screen">
       <div className="relative w-full h-[600px] overflow-hidden">
@@ -142,7 +143,7 @@ const ShoppingHome = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {products && products.length > 0 ?
               products.map((productItem) => (
-                <ShoppingProductTile handleGetProductDetails={handleGetProductDetails} product={productItem} handleAddtoCart={handleAddtoCart} />
+                <ShoppingProductTile key={productItem._id} handleGetProductDetails={handleGetProductDetails} product={productItem} handleAddtoCart={handleAddtoCart} />
               ))
               : null}
           </div>

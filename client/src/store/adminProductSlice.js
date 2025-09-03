@@ -10,6 +10,7 @@ const initialState = {
 export const addNewProduct = createAsyncThunk('/product/addNewProduct',
     async (formData) => {
         const result = await axios.post(`${baseUrl}/admin/product/add`, formData, {
+            withCredentials: true,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -20,7 +21,7 @@ export const addNewProduct = createAsyncThunk('/product/addNewProduct',
 
 export const fetchAllProducts = createAsyncThunk('/product/fetchAllProducts',
     async () => {
-        const result = await axios.get(`${baseUrl}/admin/product/get`);
+        const result = await axios.get(`${baseUrl}/admin/product/get`, { withCredentials: true });
         return result?.data;
     }
 );
@@ -28,6 +29,7 @@ export const fetchAllProducts = createAsyncThunk('/product/fetchAllProducts',
 export const editProduct = createAsyncThunk('/product/editNewProduct',
     async ({ id, formData }) => {
         const result = await axios.put(`${baseUrl}/admin/product/edit/${id}`, formData, {
+            withCredentials: true,
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -38,7 +40,7 @@ export const editProduct = createAsyncThunk('/product/editNewProduct',
 
 export const deleteProduct = createAsyncThunk('/product/deleteProduct',
     async (id) => {
-        const result = await axios.delete(`${baseUrl}/admin/product/delete/${id}`);
+        const result = await axios.delete(`${baseUrl}/admin/product/delete/${id}`, { withCredentials: true });
         return result?.data;
     }
 );

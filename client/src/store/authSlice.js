@@ -34,7 +34,7 @@ export const checkAuth = createAsyncThunk("/auth/check-auth", async () => {
     const response = await axios.get(`${baseUrl}/auth/check-auth`, {
         withCredentials: true,
         headers: {
-            'Cache-Control': 'no-cache,no-store,must-revalidate,proxy-revalidate',
+            'Content-Type': 'application/json'
         }
     });
     return response.data;
