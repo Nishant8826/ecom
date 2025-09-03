@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import { baseUrl } from "@/config";
+import { Loader2 } from "lucide-react";
 
 function ShoppingCheckout() {
   const { cartItems } = useSelector((state) => state.shopCart);
@@ -20,16 +21,30 @@ function ShoppingCheckout() {
   })
 
   const handlePayment = async () => {
-
-    const stripe = await loadStripe(import.meta.env.VITE_STRIPE_PK);
-    const response = await axios.post(`${baseUrl}/order/create-checkout-session`, cartItems, { withCredentials: true });
-    const stripeSome = await stripe.redirectToCheckout({ sessionId: response?.data?.id });
-
-
-  }
+    try {
+      setIsPaymemntStart(true);
+      const stripe = await loadStripe(import.meta.env.VITE_STRIPE_PK);
+      const response = await axios.post(`${baseUrl}/order/create-checkout-session`, cartItems, { withCredentials: true });
+      await stripe.redirectToCheckout({ sessionId: response?.data?.id });
+    } catch (error) {
+      console.error("Payment error:", error);
+      setIsPaymemntStart(false);
+    }
+  };
 
   return (
     <div className="flex flex-col">
+
+      {isPaymentStart && (
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black bg-opacity-70">
+          <Loader2 className="h-12 w-12 animate-spin text-white" />
+          <p className="mt-4 text-white text-lg font-medium">
+            Processing Payment...
+          </p>
+        </div>
+      )}
+
+
       <div className="relative h-[300px] w-full overflow-hidden">
         <img src={img} className="h-full w-full object-cover object-center" />
       </div>
@@ -41,15 +56,15 @@ function ShoppingCheckout() {
               <UserCartItemsContent key={item.productId} cartItem={item} />
             ))
             : null}
-          <div className="mt-8 space-y-4">
+          {/* <div className="mt-8 space-y-4">
             <div className="flex justify-between">
               <span className="font-bold">Total</span>
               <span className="font-bold">${totalCartAmount}</span>
             </div>
-          </div>
+          </div> */}
           <div className="mt-4 w-full">
             <Button onClick={handlePayment} className="w-full">
-              {isPaymentStart ? "Processing Paypal Payment..." : "Checkout with Paypal"}
+              {`Pay Now $${totalCartAmount}`}
             </Button>
           </div>
         </div>

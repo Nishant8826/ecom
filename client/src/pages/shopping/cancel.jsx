@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const StripeCancel = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-100 to-white px-4">
+    <div className="min-h-[95vh] flex items-center justify-center bg-gradient-to-br from-red-100 to-white px-4">
       <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md text-center animate-fade-in">
         <XCircle size={72} className="text-red-500 mx-auto mb-4 animate-pop" />
         <h2 className="text-3xl font-bold text-gray-800 mb-2">Payment Cancelled</h2>
