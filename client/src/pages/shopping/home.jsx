@@ -75,6 +75,7 @@ const ShoppingHome = () => {
   }, [productDetails]);
 
   useEffect(() => {
+    setOpenDetailsDialog(false);
     const timer = setInterval(() => {
       setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
     }, 5000);

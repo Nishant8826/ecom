@@ -42,7 +42,7 @@ app.use('/api/v1/shop/product', shopRoutes);
 app.use('/api/v1/shop/cart', cartRoutes);
 app.use('/api/v1/address', addressRouter);
 app.use('/api/v1/order', orderRoutes);
-app.use('/', webhookRoute);
+app.use('/stripe', webhookRoute);
 
 app.use(errorHandler);
 

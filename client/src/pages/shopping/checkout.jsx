@@ -24,7 +24,7 @@ function ShoppingCheckout() {
     try {
       setIsPaymemntStart(true);
       const stripe = await loadStripe(import.meta.env.VITE_STRIPE_PK);
-      const response = await axios.post(`${baseUrl}/order/create-checkout-session`, cartItems, { withCredentials: true });
+      const response = await axios.post(`${baseUrl}/order/create-checkout-session`, {cartItems , totalCartAmount}, { withCredentials: true });
       await stripe.redirectToCheckout({ sessionId: response?.data?.id });
     } catch (error) {
       console.error("Payment error:", error);
