@@ -9,9 +9,29 @@ const api = axios.create({
 })
 
 
-export const markPaid = async (orderId) => {
+export const capturePayment = async (orderId) => {
     try {
-        const resp = await api.post('/order/mark-paid', { orderId });
+        const resp = await api.post('/order/capture-payment', { orderId });
+        return resp.data;
+    } catch (error) {
+        console.error("Error marking order paid:", error);
+        throw error;
+    }
+}
+
+export const getAllOrdersByUser = async (userId) => {
+    try {
+        const resp = await api.get('/order/list/' + userId);
+        return resp.data;
+    } catch (error) {
+        console.error("Error marking order paid:", error);
+        throw error;
+    }
+}
+
+export const getOrderDetails = async (id) => {
+    try {
+        const resp = await api.get(`/order/details/${id}`);
         return resp.data;
     } catch (error) {
         console.error("Error marking order paid:", error);

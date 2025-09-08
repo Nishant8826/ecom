@@ -1,4 +1,4 @@
-import { markPaid } from '@/services/api';
+import { capturePayment } from '@/services/api';
 import { fetchCart } from '@/store/cartSlice';
 import { CheckCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -14,7 +14,7 @@ const StripeSuccess = () => {
 
     const updateOrder = async () => {
         try {
-            const res = await markPaid(orderId);
+            const res = await capturePayment(orderId);
             dispatch(fetchCart({ userId: user?._id }))
             console.log("Order updated:", res);
         } catch (err) {

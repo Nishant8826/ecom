@@ -6,27 +6,26 @@ const TryCatch = require("../utils/tryCatch");
 const stripe = require('stripe')(process.env.STRIPE_KEY);
 
 
-const checkoutSession = TryCatch(async (req, res, next) => {
-    const { cartItems, totalCartAmount } = req.body;
-    const { items, addressInfo, userId } = cartItems;
+const createOrder = TryCatch(async (req, res, next) => {
+    const { userId, cartItems, totalAmount, addressInfo, orderStatus, paymentStatus, paymentMethod, orderDate, orderUpdateDate } = req.body;
     if (!userId) return next(new ErrorClass('userId is invalid', 400));
-    if (!items || items.length == 0) return next(new ErrorClass('Please add items to proceed with payment', 400));
+    if (!cartItems || cartItems.length == 0) return next(new ErrorClass('Please add items to proceed with payment', 400));
 
 
-    const order = await OrderModel.create({
+    let order = await OrderModel.create({
         userId,
-        cartItems: items,
+        cartItems,
         addressInfo,
-        orderStatus: "pending",
-        paymentStatus: "unpaid",
-        paymentMethod: "card",
-        totalAmount: totalCartAmount,
-        orderDate: new Date(),
-        orderUpdateDate: new Date(),
+        orderStatus,
+        paymentStatus,
+        paymentMethod,
+        totalAmount,
+        orderDate,
+        orderUpdateDate,
     });
 
 
-    const line_items = items.map((item) => ({
+    const line_items = cartItems.map((item) => ({
         price_data: {
             currency: 'inr',
             product_data: {
@@ -50,13 +49,15 @@ const checkoutSession = TryCatch(async (req, res, next) => {
         metadata: { orderId: order._id.toString() },
     })
 
+    order.stripeSessionId = session.id;
+    await order.save();
 
     return res.status(201).json({ success: true, id: session.id });
 
 
 })
 
-const markPaid = TryCatch(async (req, res, next) => {
+const capturePayment = TryCatch(async (req, res, next) => {
     const { orderId } = req.body;
     if (!orderId) return next(new ErrorClass('orderId is invalid', 400));
 
@@ -77,5 +78,30 @@ const markPaid = TryCatch(async (req, res, next) => {
 });
 
 
+const getAllOrdersByUser = TryCatch(async (req, res, next) => {
+    const { userId } = req.params;
+    if (!userId) return next(new ErrorClass('userId is invalid', 400));
 
-module.exports = { checkoutSession, markPaid };
+    const orders = await OrderModel.find({ userId });
+    if (orders.length == 0) {
+        return next(new ErrorClass('No orders found!', 400));
+    }
+
+    return res.status(200).json({ success: true, data: orders });
+})
+
+
+const getOrderDetails = TryCatch(async (req, res, next) => {
+    const { id } = req.params;
+    if (!id) return next(new ErrorClass('id is invalid', 400));
+
+    const order = await OrderModel.findById(id );
+    if (order.length == 0) {
+        return next(new ErrorClass('No order found!', 400));
+    }
+
+    return res.status(200).json({ success: true, data: order });
+})
+
+
+module.exports = { createOrder, capturePayment, getAllOrdersByUser, getOrderDetails };
