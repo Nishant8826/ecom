@@ -8,6 +8,7 @@ import { getAllOrdersByUser, getOrderDetails } from '@/services/api'
 import { useSelector } from 'react-redux'
 import { Skeleton } from '../ui/skeleton'
 import { Badge } from '../ui/badge'
+import { formatDateTime } from '@/utils/formatDate'
 
 const ShoppingOrders = () => {
     const { user } = useSelector(state => state.auth);
@@ -29,6 +30,7 @@ const ShoppingOrders = () => {
         setOpenDetailsDialog(true)
         const detail = await getOrderDetails(id);
         console.log(detail);
+        setOrderDetail(detail?.data);
     }
 
     useEffect(() => {
@@ -61,14 +63,14 @@ const ShoppingOrders = () => {
                                 orders.map((orderItem) => (
                                     <TableRow key={orderItem?._id}>
                                         <TableCell>{orderItem?._id}</TableCell>
-                                        <TableCell>{orderItem?.orderDate}</TableCell>
+                                        <TableCell>{formatDateTime(orderItem?.orderDate)}</TableCell>
                                         <TableCell><Badge className={`py-1 px-3 cursor-cell ${orderItem?.orderStatus === "confirmed" ? "bg-green-500" : orderItem?.orderStatus === "rejected" ? "bg-red-600" : "bg-yellow-400"
                                             }`}>{orderItem?.orderStatus}</Badge></TableCell>
                                         <TableCell>${orderItem?.totalAmount}</TableCell>
                                         <TableCell>
                                             <Dialog open={openDetailsDialog} onOpenChange={() => setOpenDetailsDialog(false)}>
                                                 <Button onClick={() => handleOrderDetails(orderItem._id)}>View Details</Button>
-                                                <ShoppingOrderDetails />
+                                                <ShoppingOrderDetails orderDetail={orderDetail} />
                                             </Dialog>
                                         </TableCell>
                                     </TableRow>

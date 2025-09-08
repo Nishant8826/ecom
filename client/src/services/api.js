@@ -39,5 +39,25 @@ export const getOrderDetails = async (id) => {
     }
 }
 
+export const fetchAllOrdersByAdmin = async () => {
+    try {
+        const resp = await api.get(`/admin/order/fetch-all-orders`, { withCredentials: true });
+        return resp.data;
+    } catch (error) {
+        console.error("Error marking order paid:", error);
+        throw error;
+    }
+}
+
+export const fetchOrderDetailsByAdmin = async (id) => {
+    try {
+        const resp = await api.get(`/admin/order/fetch/${id}`, { withCredentials: true });
+        return resp.data;
+    } catch (error) {
+        console.error("Error marking order paid:", error);
+        throw error;
+    }
+}
+
 
 export default api;

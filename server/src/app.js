@@ -15,6 +15,7 @@ const addressRouter = require('./routes/address-routes');
 const orderRoutes = require('./routes/order-routes');
 const webhookRoute = require('./routes/stripeWebhook');
 const logger = require('./logger');
+const adminOrder = require('./routes/admin/order');
 
 
 Connection();
@@ -38,6 +39,7 @@ app.use(express.json());
 // routes
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/admin/product', adminRoutes);
+app.use('/api/v1/admin/order', adminOrder);
 app.use('/api/v1/shop/product', shopRoutes);
 app.use('/api/v1/shop/cart', cartRoutes);
 app.use('/api/v1/address', addressRouter);
