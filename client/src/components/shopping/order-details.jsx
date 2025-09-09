@@ -4,6 +4,7 @@ import { DialogContent, DialogTitle } from '../ui/dialog'
 import { useSelector } from 'react-redux'
 import { Badge } from '../ui/badge'
 import { formatDateTime } from '@/utils/formatDate'
+import { statusStyles } from '@/utils/orderStatusStyles'
 
 const ShoppingOrderDetails = ({ orderDetail }) => {
     const { user } = useSelector(state => state.auth);
@@ -35,8 +36,7 @@ const ShoppingOrderDetails = ({ orderDetail }) => {
                     </div>
                     <div className="flex mt-2 items-center justify-between">
                         <p className="font-medium">Order Status</p>
-                        <Label><Badge className={`py-1 px-3 cursor-cell ${orderDetail?.orderStatus === "confirmed" ? "bg-green-500" : orderDetail?.orderStatus === "rejected" ? "bg-red-600" : "bg-yellow-400"
-                            }`}>{orderDetail?.orderStatus}</Badge></Label>
+                        <Label><Badge variant={null} className={`py-1 px-3 cursor-pointer ${statusStyles[orderDetail?.orderStatus] || statusStyles.default}`}>{orderDetail?.orderStatus}</Badge></Label>
                     </div>
                 </div>
                 <Separator />

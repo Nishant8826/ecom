@@ -1,24 +1,35 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Label } from '../ui/label'
 import { Separator } from '../ui/separator'
 import { DialogContent, DialogTitle } from '../ui/dialog'
 import CommonForm from '../common/form'
 import { Badge } from '../ui/badge'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { formatDateTime } from '@/utils/formatDate'
+import { fetchAllOrdersByAdmin, updateOrderByAdmin } from '@/services/api'
+import { setOrderDetails, setOrderList } from '@/store/adminOrderSlice'
+import { statusStyles } from '@/utils/orderStatusStyles'
+import { useToast } from '@/hooks/use-toast'
 
 
-const initialFormData = {
-    status: "",
-};
-
-const AdminOrderDetails = ({ orderDetail }) => {
+const AdminOrderDetails = () => {
     const { user } = useSelector(state => state.auth);
-    const [formData, setFormData] = useState(initialFormData);
+    const { orderDetails } = useSelector(state => state.adminOrder);
+    const dispatch = useDispatch();
+    const [formData, setFormData] = useState('');
+    const { toast } = useToast();
 
-
-    const handleUpdateStatus = (e) => {
+    const handleUpdateStatus = async (e) => {
         e.preventDefault();
+        try {
+            const resp = await updateOrderByAdmin(orderDetails?._id, formData?.status);
+            dispatch(setOrderDetails(resp.data));
+            toast({ title: 'order status updated successfully!' })
+            const list = await fetchAllOrdersByAdmin();
+            dispatch(setOrderList(list.data));
+        } catch (error) {
+            console.log('Error while handleUpdateStatus : ', error);
+        }
     }
 
     return (
@@ -28,28 +39,27 @@ const AdminOrderDetails = ({ orderDetail }) => {
                 <div className="grid gap-2">
                     <div className="flex mt-6 items-center justify-between">
                         <p className="font-medium">Order ID</p>
-                        <Label>{orderDetail?._id}</Label>
+                        <Label>{orderDetails?._id}</Label>
                     </div>
                     <div className="flex mt-2 items-center justify-between">
                         <p className="font-medium">Order Date</p>
-                        <Label>{formatDateTime(orderDetail?.orderDate)}</Label>
+                        <Label>{formatDateTime(orderDetails?.orderDate)}</Label>
                     </div>
                     <div className="flex mt-2 items-center justify-between">
                         <p className="font-medium">Order Price</p>
-                        <Label>${orderDetail?.totalAmount}</Label>
+                        <Label>${orderDetails?.totalAmount}</Label>
                     </div>
                     <div className="flex mt-2 items-center justify-between">
                         <p className="font-medium">Payment method</p>
-                        <Label>{orderDetail?.paymentMethod}</Label>
+                        <Label>{orderDetails?.paymentMethod}</Label>
                     </div>
                     <div className="flex mt-2 items-center justify-between">
                         <p className="font-medium">Payment Status</p>
-                        <Label>{orderDetail?.paymentStatus}</Label>
+                        <Label>{orderDetails?.paymentStatus}</Label>
                     </div>
                     <div className="flex mt-2 items-center justify-between">
                         <p className="font-medium">Order Status</p>
-                        <Label><Badge className={`py-1 px-3 cursor-cell ${orderDetail?.orderStatus === "confirmed" ? "bg-green-500" : orderDetail?.orderStatus === "rejected" ? "bg-red-600" : "bg-yellow-400"
-                            }`}>{orderDetail?.orderStatus}</Badge></Label>
+                        <Label><Badge variant={null} className={`py-1 px-3 cursor-pointer ${statusStyles[orderDetails?.orderStatus] || statusStyles.default}`}>{orderDetails?.orderStatus}</Badge></Label>
                     </div>
                 </div>
                 <Separator />
@@ -58,8 +68,8 @@ const AdminOrderDetails = ({ orderDetail }) => {
                         <div className="font-medium">Order Details</div>
                         <ul className="grid gap-3">
                             {
-                                orderDetail?.cartItems.map((item) => (
-                                    <li className="flex items-center justify-between">
+                                orderDetails?.cartItems && orderDetails?.cartItems.map((item) => (
+                                    <li key={item?._id} className="flex items-center justify-between">
                                         <span>{item?.title}</span>
                                         {/* <span>{item?.quantity}</span> */}
                                         <span>${item?.price}</span>
@@ -74,11 +84,11 @@ const AdminOrderDetails = ({ orderDetail }) => {
                         <div className="font-medium">Shipping Info</div>
                         <div className="grid gap-0.5 text-muted-foreground">
                             <span>{user?.userName}</span>
-                            <span>{orderDetail?.addressInfo?.address}</span>
-                            <span>{orderDetail?.addressInfo?.city}</span>
-                            <span>{orderDetail?.addressInfo?.pincode}</span>
-                            <span>{orderDetail?.addressInfo?.phone}</span>
-                            <span>{orderDetail?.addressInfo?.notes}</span>
+                            <span>{orderDetails?.addressInfo?.address}</span>
+                            <span>{orderDetails?.addressInfo?.city}</span>
+                            <span>{orderDetails?.addressInfo?.pincode}</span>
+                            <span>{orderDetails?.addressInfo?.phone}</span>
+                            <span>{orderDetails?.addressInfo?.notes}</span>
                         </div>
                     </div>
                 </div>

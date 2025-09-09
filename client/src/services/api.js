@@ -59,5 +59,15 @@ export const fetchOrderDetailsByAdmin = async (id) => {
     }
 }
 
+export const updateOrderByAdmin = async (id, orderStatus) => {
+    try {
+        const resp = await api.put(`/admin/order/update/${id}`, { orderStatus }, { withCredentials: true });
+        return resp.data;
+    } catch (error) {
+        console.error("Error marking order paid:", error);
+        throw error;
+    }
+}
+
 
 export default api;

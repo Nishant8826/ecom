@@ -8,15 +8,18 @@ import { fetchAllOrdersByAdmin, fetchOrderDetailsByAdmin } from '@/services/api'
 import { Skeleton } from '../ui/skeleton'
 import { Badge } from '../ui/badge'
 import { formatDateTime } from '@/utils/formatDate'
+import { useDispatch, useSelector } from 'react-redux'
+import { setOrderDetails, setOrderList } from '@/store/adminOrderSlice'
+import { statusStyles } from '@/utils/orderStatusStyles'
 
 const AdminOrderView = () => {
+    const dispatch = useDispatch();
+    const { orderList } = useSelector(state => state.adminOrder)
     const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
-    const [orderList, setOrderList] = useState([]);
-    const [orderDetail, setOrderDetail] = useState(null);
 
     const fetchAllOrders = async () => {
         const resp = await fetchAllOrdersByAdmin();
-        setOrderList(resp.data);
+        dispatch(setOrderList(resp.data));
     }
 
     useEffect(() => {
@@ -25,8 +28,8 @@ const AdminOrderView = () => {
 
     const handleOrderDetails = async (id) => {
         setOpenDetailsDialog(true)
-        const detail = await fetchOrderDetailsByAdmin(id);
-        setOrderDetail(detail?.data);
+        const resp = await fetchOrderDetailsByAdmin(id);
+        dispatch(setOrderDetails(resp.data))
     }
 
     return (
@@ -54,13 +57,12 @@ const AdminOrderView = () => {
                                     <TableRow key={orderItem?._id}>
                                         <TableCell>{orderItem?._id}</TableCell>
                                         <TableCell>{formatDateTime(orderItem?.orderDate)}</TableCell>
-                                        <TableCell><Badge className={`py-1 px-3 cursor-cell ${orderItem?.orderStatus === "confirmed" ? "bg-green-500" : orderItem?.orderStatus === "rejected" ? "bg-red-600" : "bg-yellow-400"
-                                            }`}>{orderItem?.orderStatus}</Badge></TableCell>
+                                        <TableCell><Badge variant={null} className={`py-1 px-3 cursor-pointer ${statusStyles[orderItem?.orderStatus] || statusStyles.default}`}>{orderItem?.orderStatus}</Badge></TableCell>
                                         <TableCell>${orderItem?.totalAmount}</TableCell>
                                         <TableCell>
                                             <Dialog open={openDetailsDialog} onOpenChange={() => setOpenDetailsDialog(false)}>
                                                 <Button onClick={() => handleOrderDetails(orderItem._id)}>View Details</Button>
-                                                <AdminOrderDetails orderDetail={orderDetail} />
+                                                <AdminOrderDetails />
                                             </Dialog>
                                         </TableCell>
                                     </TableRow>

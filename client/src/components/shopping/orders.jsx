@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux'
 import { Skeleton } from '../ui/skeleton'
 import { Badge } from '../ui/badge'
 import { formatDateTime } from '@/utils/formatDate'
+import { statusStyles } from '@/utils/orderStatusStyles'
 
 const ShoppingOrders = () => {
     const { user } = useSelector(state => state.auth);
@@ -64,8 +65,7 @@ const ShoppingOrders = () => {
                                     <TableRow key={orderItem?._id}>
                                         <TableCell>{orderItem?._id}</TableCell>
                                         <TableCell>{formatDateTime(orderItem?.orderDate)}</TableCell>
-                                        <TableCell><Badge className={`py-1 px-3 cursor-cell ${orderItem?.orderStatus === "confirmed" ? "bg-green-500" : orderItem?.orderStatus === "rejected" ? "bg-red-600" : "bg-yellow-400"
-                                            }`}>{orderItem?.orderStatus}</Badge></TableCell>
+                                        <TableCell><Badge variant={null} className={`py-1 px-3 cursor-pointer ${statusStyles[orderItem?.orderStatus] || statusStyles.default}`}>{orderItem?.orderStatus}</Badge></TableCell>
                                         <TableCell>${orderItem?.totalAmount}</TableCell>
                                         <TableCell>
                                             <Dialog open={openDetailsDialog} onOpenChange={() => setOpenDetailsDialog(false)}>
