@@ -37,7 +37,7 @@ const App = () => {
 
 
   if (isLoading) {
-    return <Skeleton className="h-[20px] w-[100px] rounded-full" />
+    return <Skeleton className="h-[20px] w-[100px] rounded-full bg-slate-200" />
   }
 
   return (

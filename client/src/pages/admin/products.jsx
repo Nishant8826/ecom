@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addNewProduct, deleteProduct, editProduct, fetchAllProducts } from '@/store/adminProductSlice';
 import { useToast } from '@/hooks/use-toast';
 import AdminProductTile from '@/components/admin/adminProductTile';
+import ProductTileSkeleton from '@/components/common/productShimmer';
 
 
 const initialFormData = {
@@ -101,7 +102,7 @@ const AdminProducts = () => {
           ? products.map((item) => (
             <AdminProductTile product={item} key={item._id} setCurrentEditedId={setCurrentEditedId} setFormData={setFormData} setOpenCreateProductsDialog={setOpenCreateProductsDialog} handleDeleteProduct={handleDeleteProduct} />
           ))
-          : null}
+          : Array.from({ length: 10 }).map((_, i) => <ProductTileSkeleton key={i} />)}
       </div>
 
 
