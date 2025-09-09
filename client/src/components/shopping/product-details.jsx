@@ -8,6 +8,7 @@ import { Star } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "@/hooks/use-toast";
 import { addCart, fetchCart } from "@/store/cartSlice";
+import { Badge } from "../ui/badge";
 
 const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
     const { user } = useSelector(state => state.auth);
@@ -39,7 +40,18 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
         <Dialog open={open} onOpenChange={handleDialogClose}>
             <DialogContent className="grid grid-cols-2 gap-8 sm:p-12 max-w-[90vw] sm:max-w-[80vw] lg:max-w-[70vw]">
                 <div className="relative overflow-hidden rounded-lg">
-                    <img src={productDetails?.image} alt={productDetails?.title} width={600} height={600} className="aspect-square w-full object-cover" />
+                    <img src={productDetails?.image} alt={productDetails?.title} width={600} height={600} className="aspect-square w-full object-contain" />
+                    {
+                        productDetails?.totalStock == 0 ? <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
+                            Out of Stock
+                        </Badge> : productDetails?.totalStock < 10 ? <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
+                            {`only ${productDetails?.totalStock} items left`}
+                        </Badge> :
+                            productDetails?.salePrice > 0 ? <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
+                                Sale
+                            </Badge>
+                                : null
+                    }
                 </div>
                 <div>
                     <div>
@@ -75,12 +87,9 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                     <div className="max-h-[300px] overflow-auto">
                         <h2 className="text-xl font-bold mb-4">Reviews</h2>
                         <div className="grid gap-6">
-                            {/* {reviews && reviews.length > 0 ? ( */}
-                            {/* reviews.map((reviewItem) => ( */}
                             <div className="flex gap-4">
                                 <Avatar className="w-10 h-10 border">
                                     <AvatarFallback>
-                                        {/* {reviewItem?.userName[0].toUpperCase()} */}
                                         NR
                                     </AvatarFallback>
                                 </Avatar>
@@ -89,7 +98,6 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                                         <h3 className="font-bold">Nishant Rathore</h3>
                                     </div>
                                     <div className="flex items-center gap-0.5">
-                                        {/* <StarRatingComponent rating={5} /> */}
                                         <Star />
                                         <Star />
                                         <Star />
@@ -97,22 +105,14 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                                         <Star />
                                     </div>
                                     <p className="text-muted-foreground">
-                                        {/* {reviewItem.reviewMessage} */}
                                         Awsome
                                     </p>
                                 </div>
                             </div>
-
-
-                            {/* )) */}
-                            {/* ) : ( */}
-                            {/* <h1>No Reviews</h1> */}
-                            {/* )} */}
                         </div>
                         <div className="mt-10 flex-col flex gap-2">
                             <Label>Write a review</Label>
                             <div className="flex gap-1">
-                                {/* <StarRatingComponent/> */}
                             </div>
                             <Input name="reviewMsg" placeholder="Write a review..." />
                             <Button>Submit</Button>

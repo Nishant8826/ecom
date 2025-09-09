@@ -34,6 +34,8 @@ const ShoppingListing = () => {
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
   const { toast } = useToast();
 
+  const categorySearchParam = searchParams.get('category')
+
   const handleSort = (value) => {
     setSort(value)
   }
@@ -64,10 +66,7 @@ const ShoppingListing = () => {
     dispatch(addCart({ userId: user._id, productId, quantity: 1 })).then((response) => {
       if (response?.payload?.success) {
         dispatch(fetchCart({ userId: user?._id }))
-        toast({
-          variant: 'success',
-          title: 'Product is Added to Cart successfully'
-        })
+        toast({ title: 'Product is Added to Cart successfully' });
       }
     }).catch((err) => {
       toast({
@@ -93,14 +92,13 @@ const ShoppingListing = () => {
   useEffect(() => {
     setSort('price-lowtohigh');
     setFilters(JSON.parse(sessionStorage.getItem('filters')) || {})
-  }, []);
+  }, [categorySearchParam]);
 
   useEffect(() => {
     if (filters !== null && sort !== null) {
       dispatch(fetchAllFilteredProducts({ filterParams: filters, sortBy: sort }));
     }
   }, [dispatch, filters, sort])
-
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-6 p-4 md:p-6">
@@ -114,11 +112,7 @@ const ShoppingListing = () => {
             </span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center gap-1"
-                >
+                <Button variant="outline" size="sm" className="flex items-center gap-1">
                   <ArrowUpDownIcon className="h-4 w-4" />
                   <span>Sort by</span>
                 </Button>
@@ -138,20 +132,12 @@ const ShoppingListing = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
           {products && products.length > 0
             ? products.map((item) => (
-              <ShoppingProductTile
-                handleGetProductDetails={handleGetProductDetails}
-                product={item}
-                handleAddtoCart={handleAddtoCart}
-              />
+              <ShoppingProductTile key={item._id} handleGetProductDetails={handleGetProductDetails} product={item} handleAddtoCart={handleAddtoCart} />
             ))
             : null}
         </div>
       </div>
-      <ProductDetailsDialog
-        open={openDetailsDialog}
-        setOpen={setOpenDetailsDialog}
-        productDetails={productDetails}
-      />
+      <ProductDetailsDialog open={openDetailsDialog} setOpen={setOpenDetailsDialog} productDetails={productDetails} />
     </div>
   )
 }

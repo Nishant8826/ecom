@@ -12,16 +12,18 @@ const ShoppingProductTile = ({ product, handleGetProductDetails, handleAddtoCart
     <Card key={product._id} className="w-full max-w-sm mx-auto hover:cursor-pointer">
       <div onClick={() => handleGetProductDetails(product?._id)}>
         <div className="relative">
-          <img
-            src={product?.image}
-            alt={product?.title}
-            className="w-full h-[300px] object-cover rounded-t-lg"
-          />
-          {product?.salePrice > 0 ? (
-            <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
-              Sale
-            </Badge>
-          ) : null}
+          <img src={product?.image} alt={product?.title} className="w-[300px] h-[300px] object-contain rounded-t-lg" />
+          {
+            product?.totalStock == 0 ? <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
+              Out of Stock
+            </Badge> : product?.totalStock < 10 ? <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
+              {`only ${product?.totalStock} items left`}
+            </Badge> :
+              product?.salePrice > 0 ? <Badge className="absolute top-2 left-2 bg-red-500 hover:bg-red-600">
+                Sale
+              </Badge>
+                : null
+          }
         </div>
         <CardContent className="p-4">
           <h2 className="text-xl font-bold mb-2">{product?.title}</h2>
@@ -49,9 +51,15 @@ const ShoppingProductTile = ({ product, handleGetProductDetails, handleAddtoCart
         </CardContent>
       </div>
       <CardFooter>
-        <Button className="w-full" onClick={()=>handleAddtoCart(product?._id)}>
-          Add to cart
-        </Button>
+        {
+          product?.totalStock == 0 ?
+            <Button className="w-full cursor-not-allowed opacity-65">
+              Out of Stock
+            </Button> :
+            <Button className="w-full" onClick={() => handleAddtoCart(product?._id)}>
+              Add to cart
+            </Button>
+        }
       </CardFooter>
     </Card>
 
