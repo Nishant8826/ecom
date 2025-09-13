@@ -12,6 +12,7 @@ import { Badge } from "../ui/badge";
 
 const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
     const { user } = useSelector(state => state.auth);
+    const { cartItems } = useSelector(state => state.shopCart);
     const dispatch = useDispatch();
     const { toast } = useToast();
 
@@ -19,7 +20,23 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
         setOpen(false);
     }
 
-    const handleAddtoCart = (productId) => {
+    const handleAddtoCart = (productId, getTotalStock) => {
+
+        let getCartItems = cartItems.items || [];
+        if (getCartItems.length) {
+            const indexOfCurrentItem = getCartItems.findIndex((item) => item.productId === productId);
+            if (indexOfCurrentItem > -1) {
+                const getQuantity = getCartItems[indexOfCurrentItem].quantity;
+                if (getQuantity + 1 > getTotalStock) {
+                    toast({
+                        title: `Only ${getQuantity} quantity can be added for this item`,
+                        variant: "destructive",
+                    });
+                    return;
+                }
+            }
+        }
+
         dispatch(addCart({ userId: user?._id, productId, quantity: 1 })).then((response) => {
             if (response?.payload?.success) {
                 dispatch(fetchCart({ userId: user?._id }))
@@ -80,7 +97,7 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                         {productDetails?.totalStock === 0 ? (
                             <Button className="w-full opacity-60 cursor-not-allowed">Out of Stock</Button>
                         ) : (
-                            <Button className="w-full" onClick={() => handleAddtoCart(productDetails?._id)}>Add to Cart</Button>
+                            <Button className="w-full" onClick={() => handleAddtoCart(productDetails?._id, productDetails?.totalStock)}>Add to Cart</Button>
                         )}
                     </div>
                     <Separator />

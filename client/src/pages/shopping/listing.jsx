@@ -27,6 +27,7 @@ const createSearchParamsHelper = (filterParams) => {
 const ShoppingListing = () => {
   const dispatch = useDispatch();
   const { user } = useSelector(state => state.auth);
+  const { cartItems } = useSelector(state => state.shopCart);
   const { products, productDetails } = useSelector(state => state.shoppingProduct)
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState(null);
@@ -62,7 +63,23 @@ const ShoppingListing = () => {
 
   }
 
-  const handleAddtoCart = (productId) => {
+  const handleAddtoCart = (productId, getTotalStock) => {
+
+    let getCartItems = cartItems.items || [];
+    if (getCartItems.length) {
+      const indexOfCurrentItem = getCartItems.findIndex((item) => item.productId === productId);
+      if (indexOfCurrentItem > -1) {
+        const getQuantity = getCartItems[indexOfCurrentItem].quantity;
+        if (getQuantity + 1 > getTotalStock) {
+          toast({
+            title: `Only ${getQuantity} quantity can be added for this item`,
+            variant: "destructive",
+          });
+          return;
+        }
+      }
+    }
+
     dispatch(addCart({ userId: user._id, productId, quantity: 1 })).then((response) => {
       if (response?.payload?.success) {
         dispatch(fetchCart({ userId: user?._id }))

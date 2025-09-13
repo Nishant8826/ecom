@@ -5,8 +5,6 @@ import { brandOptionsMap, categoryOptionsMap } from "@/config"
 
 const ShoppingProductTile = ({ product, handleGetProductDetails, handleAddtoCart }) => {
 
-
-
   return (
 
     <Card key={product._id} className="w-full max-w-sm mx-auto hover:cursor-pointer">
@@ -56,7 +54,7 @@ const ShoppingProductTile = ({ product, handleGetProductDetails, handleAddtoCart
             <Button className="w-full cursor-not-allowed opacity-65">
               Out of Stock
             </Button> :
-            <Button className="w-full" onClick={() => handleAddtoCart(product?._id)}>
+            <Button className="w-full" onClick={() => handleAddtoCart(product?._id, product?.totalStock)}>
               Add to cart
             </Button>
         }

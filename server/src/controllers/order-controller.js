@@ -1,6 +1,7 @@
 const config = require("../config/config");
 const cartModel = require("../models/Cart");
 const OrderModel = require("../models/Order");
+const productModel = require("../models/Product");
 const ErrorClass = require("../utils/ErrorClass");
 const TryCatch = require("../utils/tryCatch");
 const stripe = require('stripe')(process.env.STRIPE_KEY);
@@ -69,6 +70,18 @@ const capturePayment = TryCatch(async (req, res, next) => {
 
     if (!order) return next(new ErrorClass("Order not found", 404));
 
+    for (let item of order.cartItems) {
+        let product = await productModel.findById(item.productId);
+
+        if (!product) return next(new ErrorClass(`Not enough stock for this product ${product.title}`));
+
+        product.totalStock -= item.quantity;
+
+        await product.save()
+
+    }
+
+
     await cartModel.findOneAndUpdate(
         { userId: order.userId },
         { $set: { items: [] } }
@@ -95,7 +108,7 @@ const getOrderDetails = TryCatch(async (req, res, next) => {
     const { id } = req.params;
     if (!id) return next(new ErrorClass('id is invalid', 400));
 
-    const order = await OrderModel.findById(id );
+    const order = await OrderModel.findById(id);
     if (order.length == 0) {
         return next(new ErrorClass('No order found!', 400));
     }
