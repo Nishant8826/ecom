@@ -1,21 +1,13 @@
-import React, { useState } from 'react'
 import { Label } from '../ui/label'
 import { Separator } from '../ui/separator'
 import { DialogContent, DialogTitle } from '../ui/dialog'
-import CommonForm from '../common/form'
+import { useSelector } from 'react-redux'
+import { Badge } from '../ui/badge'
+import { formatDateTime } from '@/utils/formatDate'
+import { statusStyles } from '@/utils/orderStatusStyles'
 
-
-const initialFormData = {
-    status: "",
-};
-
-const ShoppingOrderDetails = () => {
-    const [formData, setFormData] = useState(initialFormData);
-
-
-    const handleUpdateStatus = (e) => {
-        e.preventDefault();
-    }
+const ShoppingOrderDetails = ({ orderDetail }) => {
+    const { user } = useSelector(state => state.auth);
 
     return (
         <DialogContent className="sm:max-w-[600px]">
@@ -24,27 +16,27 @@ const ShoppingOrderDetails = () => {
                 <div className="grid gap-2">
                     <div className="flex mt-6 items-center justify-between">
                         <p className="font-medium">Order ID</p>
-                        <Label>12344</Label>
+                        <Label>{orderDetail?._id}</Label>
                     </div>
                     <div className="flex mt-2 items-center justify-between">
                         <p className="font-medium">Order Date</p>
-                        <Label>12/01/2025</Label>
+                        <Label>{formatDateTime(orderDetail?.orderDate)}</Label>
                     </div>
                     <div className="flex mt-2 items-center justify-between">
                         <p className="font-medium">Order Price</p>
-                        <Label>$1000</Label>
+                        <Label>${orderDetail?.totalAmount}</Label>
                     </div>
                     <div className="flex mt-2 items-center justify-between">
-                        <p className="font-medium">Payment method</p>
-                        <Label>UPI</Label>
+                        <p className="font-medium">Payment Method</p>
+                        <Label>{orderDetail?.paymentMethod}</Label>
                     </div>
                     <div className="flex mt-2 items-center justify-between">
                         <p className="font-medium">Payment Status</p>
-                        <Label>Success</Label>
+                        <Label>{orderDetail?.paymentStatus}</Label>
                     </div>
                     <div className="flex mt-2 items-center justify-between">
                         <p className="font-medium">Order Status</p>
-                        <Label>In Process</Label>
+                        <Label><Badge variant={null} className={`py-1 px-3 cursor-pointer ${statusStyles[orderDetail?.orderStatus] || statusStyles.default}`}>{orderDetail?.orderStatus}</Badge></Label>
                     </div>
                 </div>
                 <Separator />
@@ -52,11 +44,15 @@ const ShoppingOrderDetails = () => {
                     <div className="grid gap-2">
                         <div className="font-medium">Order Details</div>
                         <ul className="grid gap-3">
-                            <li className="flex items-center justify-between">
-                                <span>Title: </span>
-                                <span>Quantity: </span>
-                                <span>Price: $</span>
-                            </li>
+                            {
+                                orderDetail?.cartItems.map((item) => (
+                                    <li className="flex items-center justify-between">
+                                        <span>{item?.title}</span>
+                                        {/* <span>{item?.quantity}</span> */}
+                                        <span>${item?.price}</span>
+                                    </li>
+                                ))
+                            }
                         </ul>
                     </div>
                 </div>
@@ -64,12 +60,12 @@ const ShoppingOrderDetails = () => {
                     <div className="grid gap-2">
                         <div className="font-medium">Shipping Info</div>
                         <div className="grid gap-0.5 text-muted-foreground">
-                            <span>Nishant</span>
-                            <span>orderDetails?.addressInfo?.address</span>
-                            <span>orderDetails?.addressInfo?.city</span>
-                            <span>orderDetails?.addressInfo?.pincode</span>
-                            <span>orderDetails?.addressInfo?.phone</span>
-                            <span>orderDetails?.addressInfo?.notes</span>
+                            <span>{user?.userName}</span>
+                            <span>{orderDetail?.addressInfo?.address}</span>
+                            <span>{orderDetail?.addressInfo?.city}</span>
+                            <span>{orderDetail?.addressInfo?.pincode}</span>
+                            <span>{orderDetail?.addressInfo?.phone}</span>
+                            <span>{orderDetail?.addressInfo?.notes}</span>
                         </div>
                     </div>
                 </div>

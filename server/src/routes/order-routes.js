@@ -1,7 +1,10 @@
 const express = require('express');
-const { checkoutSession } = require('../controllers/order-controller');
+const { capturePayment, createOrder, getOrderDetails, getAllOrdersByUser } = require('../controllers/order-controller');
 const orderRoutes = express.Router();
 
-orderRoutes.post('/create-checkout-session', checkoutSession);
+orderRoutes.post('/create-order', createOrder);
+orderRoutes.post('/capture-payment', capturePayment);
+orderRoutes.get('/list/:userId', getAllOrdersByUser);
+orderRoutes.get('/details/:id', getOrderDetails);
 
 module.exports = orderRoutes;

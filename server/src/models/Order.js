@@ -27,8 +27,7 @@ const OrderSchema = new mongoose.Schema({
     totalAmount: String,
     orderDate: String,
     orderUpdateDate: String,
-    paymentId: String,
-    payerId: String,
+    stripeSessionId: String,
 })
 
 

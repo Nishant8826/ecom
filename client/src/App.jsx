@@ -22,6 +22,7 @@ import { Skeleton } from './components/ui/skeleton'
 import ShoppingHome from './pages/shopping/home'
 import StripeSuccess from './pages/shopping/success'
 import StripeCancel from './pages/shopping/cancel'
+import SearchProducts from './pages/shopping/search'
 
 const App = () => {
 
@@ -37,7 +38,7 @@ const App = () => {
 
 
   if (isLoading) {
-    return <Skeleton className="h-[20px] w-[100px] rounded-full" />
+    return <Skeleton className="h-[20px] w-[100px] rounded-full bg-slate-200" />
   }
 
   return (
@@ -66,6 +67,7 @@ const App = () => {
           <Route path='cancel' element={<StripeCancel />} />
           <Route path='listing' element={<ShoppingListing />} />
           <Route path='home' element={<ShoppingHome />} />
+          <Route path='search' element={<SearchProducts />} />
         </Route>
 
         <Route path='unauth' element={<UnAuthorizedPage />} />
