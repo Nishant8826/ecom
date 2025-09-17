@@ -1,7 +1,7 @@
-const TryCatch = require("../utils/tryCatch");
+const TryCatch = require("../../utils/tryCatch");
 const bcrypt = require("bcrypt");
-const userModel = require("../models/user");
-const ErrorClass = require("../utils/ErrorClass");
+const userModel = require("../../models/user");
+const ErrorClass = require("../../utils/ErrorClass");
 const jwt = require("jsonwebtoken");
 
 // signup controller

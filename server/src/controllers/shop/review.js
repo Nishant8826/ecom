@@ -1,8 +1,8 @@
-const OrderModel = require("../models/Order");
-const productModel = require("../models/Product");
-const ProductReviewModel = require("../models/review");
-const ErrorClass = require("../utils/ErrorClass");
-const TryCatch = require("../utils/tryCatch");
+const OrderModel = require("../../models/Order");
+const productModel = require("../../models/Product");
+const ProductReviewModel = require("../../models/review");
+const ErrorClass = require("../../utils/ErrorClass");
+const TryCatch = require("../../utils/tryCatch");
 
 
 exports.addReview = TryCatch(async (req, res, next) => {

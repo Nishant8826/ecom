@@ -1,9 +1,9 @@
-const config = require("../config/config");
-const cartModel = require("../models/Cart");
-const OrderModel = require("../models/Order");
-const productModel = require("../models/Product");
-const ErrorClass = require("../utils/ErrorClass");
-const TryCatch = require("../utils/tryCatch");
+const config = require("../../config/config");
+const cartModel = require("../../models/Cart");
+const OrderModel = require("../../models/Order");
+const productModel = require("../../models/Product");
+const ErrorClass = require("../../utils/ErrorClass");
+const TryCatch = require("../../utils/tryCatch");
 const stripe = require('stripe')(process.env.STRIPE_KEY);
 
 

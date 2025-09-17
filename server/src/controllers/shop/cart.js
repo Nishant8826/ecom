@@ -1,7 +1,7 @@
-const cartModel = require("../models/Cart");
-const productModel = require("../models/Product");
-const ErrorClass = require("../utils/ErrorClass");
-const TryCatch = require("../utils/tryCatch");
+const cartModel = require("../../models/Cart");
+const productModel = require("../../models/Product");
+const ErrorClass = require("../../utils/ErrorClass");
+const TryCatch = require("../../utils/tryCatch");
 
 
 

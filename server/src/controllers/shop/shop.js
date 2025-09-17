@@ -1,5 +1,5 @@
-const productModel = require("../models/Product");
-const TryCatch = require("../utils/tryCatch");
+const productModel = require("../../models/Product");
+const TryCatch = require("../../utils/tryCatch");
 
 
 
