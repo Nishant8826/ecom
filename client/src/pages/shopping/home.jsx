@@ -1,7 +1,4 @@
 import { Button } from "@/components/ui/button";
-import bannerOne from "../../assets/banner-1.webp";
-import bannerTwo from "../../assets/banner-2.webp";
-import bannerThree from "../../assets/banner-3.webp";
 import { Airplay, BabyIcon, ChevronLeftIcon, ChevronRightIcon, CloudLightning, Heater, Images, Shirt, ShirtIcon, ShoppingBasket, UmbrellaIcon, WashingMachine, WatchIcon, } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEffect, useState } from "react";
@@ -12,6 +9,7 @@ import ProductDetailsDialog from "@/components/shopping/product-details";
 import { useToast } from "@/hooks/use-toast";
 import { fetchAllFilteredProducts, fetchProductDetail } from "@/store/shopProductSlice";
 import { addCart, fetchCart } from "@/store/cartSlice";
+import { getCarousel } from "@/store/carouselSlice";
 
 
 const categoriesWithIcon = [
@@ -32,11 +30,11 @@ const brandsWithIcon = [
 ];
 
 const ShoppingHome = () => {
-  const slides = [bannerOne, bannerTwo, bannerThree];
   const [currentSlide, setCurrentSlide] = useState(0);
   const { products, productDetails } = useSelector((state) => state.shoppingProduct);
   const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
 
+  const { carouselImageList } = useSelector((state) => state.carousel);
   const { user } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
@@ -76,28 +74,31 @@ const ShoppingHome = () => {
 
   useEffect(() => {
     setOpenDetailsDialog(false);
-    const timer = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length);
-    }, 5000);
+    if (carouselImageList) {
+      const timer = setInterval(() => {
+        setCurrentSlide((prevSlide) => (prevSlide + 1) % carouselImageList?.length);
+      }, 4000);
+      return () => clearInterval(timer);
+    }
 
-    return () => clearInterval(timer);
-  }, []);
+  }, [carouselImageList]);
 
   useEffect(() => {
     dispatch(fetchAllFilteredProducts({ filterParams: {}, sortBy: "price-lowtohigh" }));
+    dispatch(getCarousel());
   }, [dispatch]);
 
 
   return (
     <div className="flex flex-col min-h-screen">
       <div className="relative w-full h-[600px] overflow-hidden">
-        {slides && slides.length > 0 ?
-          slides.map((slide, index) => (<img src={slide} key={index} className={`${index === currentSlide ? "opacity-100" : "opacity-0"} absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`} />))
+        {carouselImageList && carouselImageList.length > 0 ?
+          carouselImageList.map((item, index) => (<img src={item.image} key={item._id} className={`${index === currentSlide ? "opacity-100" : "opacity-0"} absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`} />))
           : null}
-        <Button variant="outline" size="icon" onClick={() => setCurrentSlide((prevSlide) => (prevSlide - 1 + slides.length) % slides.length)} className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white/80" >
+        <Button variant="outline" size="icon" onClick={() => setCurrentSlide((prevSlide) => (prevSlide - 1 + carouselImageList.length) % carouselImageList.length)} className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white/80" >
           <ChevronLeftIcon className="w-4 h-4" />
         </Button>
-        <Button variant="outline" size="icon" onClick={() => setCurrentSlide((prevSlide) => (prevSlide + 1) % slides.length)}
+        <Button variant="outline" size="icon" onClick={() => setCurrentSlide((prevSlide) => (prevSlide + 1) % carouselImageList.length)}
           className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white/80" >
           <ChevronRightIcon className="w-4 h-4" />
         </Button>

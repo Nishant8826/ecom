@@ -31,11 +31,7 @@ const MenuItems = () => {
   return (
     <nav className="flex flex-col mb-3 mt-3 lg:mb-0 lg:items-center gap-6 lg:flex-row">
       {shoppingViewHeaderMenuItems.map((menuItem) => (
-        <Label
-          onClick={() => handleNavigate(menuItem)}
-          className="text-sm font-medium cursor-pointer hover:underline"
-          key={menuItem.id}
-        >
+        <Label onClick={() => handleNavigate(menuItem)} className="relative cursor-pointer text-md font-medium after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-black after:transition-all after:duration-500 hover:after:w-full" key={menuItem.id}>
           {menuItem.label}
         </Label>
       ))}

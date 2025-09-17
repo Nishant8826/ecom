@@ -7,7 +7,7 @@ const ShoppingProductTile = ({ product, handleGetProductDetails, handleAddtoCart
 
   return (
 
-    <Card key={product._id} className="w-full max-w-sm mx-auto hover:cursor-pointer">
+    <Card key={product._id} className="w-full max-w-sm mx-auto hover:cursor-pointer flex flex-col justify-between">
       <div onClick={() => handleGetProductDetails(product?._id)}>
         <div className="relative">
           <img src={product?.image} alt={product?.title} className="w-[300px] h-[300px] object-contain rounded-t-lg" />

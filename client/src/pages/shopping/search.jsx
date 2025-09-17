@@ -68,7 +68,6 @@ const SearchProducts = () => {
     }
 
 
-    console.log('productDetails>>', productDetails)
 
     return (
         <div className="container mx-auto md:px-6 px-4 py-8">

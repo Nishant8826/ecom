@@ -16,7 +16,6 @@ const StripeSuccess = () => {
         try {
             const res = await capturePayment(orderId);
             dispatch(fetchCart({ userId: user?._id }))
-            console.log("Order updated:", res);
         } catch (err) {
             console.error("Failed to mark paid:", err);
         } finally {
@@ -32,8 +31,8 @@ const StripeSuccess = () => {
 
     if (loading) {
         return (
-            <div className="min-h-[95vh] flex items-center justify-center bg-gradient-to-br from-green-100 to-white px-4">
-                <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full animate-pulse">
+            <div className="min-h-[90vh] flex justify-center bg-gradient-to-br from-green-100 to-white px-4">
+                <div className="bg-white m-24 h-3/6 p-8 rounded-2xl shadow-xl max-w-md w-full animate-pulse">
                     <div className="h-16 w-16 bg-green-200 rounded-full mx-auto mb-6"></div>
                     <div className="h-6 bg-gray-200 rounded mb-4 w-3/4 mx-auto"></div>
                     <div className="h-4 bg-gray-200 rounded mb-4 w-2/3 mx-auto"></div>
@@ -44,8 +43,8 @@ const StripeSuccess = () => {
     }
 
     return (
-        <div className="min-h-[95vh] flex items-center justify-center bg-gradient-to-br from-green-100 to-white px-4">
-            <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md text-center animate-fade-in">
+        <div className="min-h-[90vh] flex justify-center bg-gradient-to-br from-green-100 to-white px-4">
+            <div className="bg-white mt-24 h-3/6 px-20 py-6 rounded-2xl shadow-xl max-w-md text-center animate-fade-in">
                 <CheckCircle size={72} className="text-green-500 mx-auto mb-4 animate-pop" />
                 <h2 className="text-3xl font-bold text-gray-800 mb-2">Payment Successful!</h2>
                 <p className="text-gray-600 mb-6">Your order has been placed successfully.</p>
