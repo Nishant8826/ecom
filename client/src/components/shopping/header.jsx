@@ -1,4 +1,4 @@
-import { HousePlug, LogOut, Menu, ShoppingCart, UserCog } from 'lucide-react'
+import { HousePlug, LogOut, Menu, ShoppingCart, UserCog, LogIn, CircleUserRound } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet'
@@ -11,6 +11,8 @@ import { Avatar, AvatarFallback } from '../ui/avatar'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu'
 import UserCartWrapper from './cart-wrapper'
 import { fetchCart } from '@/store/cartSlice'
+import LoginModal from '@/pages/auth/loginModal'
+import SignupModal from '@/pages/auth/signupModal'
 
 
 const MenuItems = () => {
@@ -45,6 +47,8 @@ const HeaderRightContent = () => {
   const { user } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
   const [openCartSheet, setOpenCartSheet] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false)
+  const [signupOpen, setSignupOpen] = useState(false)
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -52,8 +56,16 @@ const HeaderRightContent = () => {
     dispatch(logout());
   }
 
+  const handleLogIn = () => {
+    // dispatch(logout());
+    setSignupOpen(false);
+    setLoginOpen(true);
+  }
+
   useEffect(() => {
-    dispatch(fetchCart({ userId: user?._id }));
+    if (user && user._id) {
+      dispatch(fetchCart({ userId: user?._id }));
+    }
   }, [dispatch]);
 
   return (
@@ -69,28 +81,34 @@ const HeaderRightContent = () => {
         />
       </Sheet>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Avatar className="bg-black">
-            <AvatarFallback className="bg-black text-white font-extrabold">
-              {user?.userName[0].toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent side="right" className="w-60 bg-white">
-          <DropdownMenuLabel>Logged in as {user?.userName}</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => navigate("/shop/account")} className="flex items-center hover:bg-gray-200 cursor-pointer">
-            <UserCog className="mr-2 h-4 w-4" />
-            Account
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleLogout} className="flex items-center hover:bg-gray-200 cursor-pointer">
-            <LogOut className="mr-2 h-4 w-4" />
-            Logout
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      {user?.userName ? (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Avatar>
+              <AvatarFallback >
+                <CircleUserRound height={40} width={40} strokeWidth={0.7} />
+              </AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="right" className="w-60 bg-white">
+            <DropdownMenuLabel>Logged in as {user?.userName}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => navigate("/shop/account")} className="flex items-center hover:bg-gray-200 cursor-pointer" >
+              <UserCog className="mr-2 h-4 w-4" />Account
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleLogout} className="flex items-center hover:bg-gray-200 cursor-pointer" >
+              <LogOut className="mr-2 h-4 w-4" />
+              Logout
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ) : (
+        <Button onClick={handleLogIn} variant="outline" size="icon"><LogIn /></Button>
+      )}
+
+      {loginOpen && <LoginModal open={loginOpen} onClose={setLoginOpen} setSignupOpen={setSignupOpen} />}
+      {signupOpen && <SignupModal open={signupOpen} onClose={setSignupOpen} setLoginOpen={setLoginOpen} />}
     </div>
   );
 }

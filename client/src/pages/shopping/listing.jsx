@@ -79,18 +79,19 @@ const ShoppingListing = () => {
         }
       }
     }
-
-    dispatch(addCart({ userId: user._id, productId, quantity: 1 })).then((response) => {
-      if (response?.payload?.success) {
-        dispatch(fetchCart({ userId: user?._id }))
-        toast({ title: 'Product is Added to Cart successfully' });
-      }
-    }).catch((err) => {
-      toast({
-        variant: 'destructive',
-        title: err.message ? err.message : 'Error Occured'
+    if (productId) {
+      dispatch(addCart({ userId: user._id, productId, quantity: 1 })).then((response) => {
+        if (response?.payload?.success) {
+          dispatch(fetchCart({ userId: user?._id }))
+          toast({ title: 'Product is Added to Cart successfully' });
+        }
+      }).catch((err) => {
+        toast({
+          variant: 'destructive',
+          title: err.message ? err.message : 'Error Occured'
+        })
       })
-    })
+    }
   }
 
   const handleGetProductDetails = (productId) => {
