@@ -1,5 +1,5 @@
 const express = require('express');
-const { capturePayment, createOrder, getOrderDetails, getAllOrdersByUser } = require('../controllers/order-controller');
+const { capturePayment, createOrder, getOrderDetails, getAllOrdersByUser } = require('../../controllers/shop/order');
 const orderRoutes = express.Router();
 
 orderRoutes.post('/create-order', createOrder);

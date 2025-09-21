@@ -26,7 +26,6 @@ export const updateAddress = createAsyncThunk('/address/update', async ({ userId
 
 
 export const deleteAddress = createAsyncThunk('/address/deleteAddress', async ({ userId, addressId }) => {
-    console.log('address>', addressId)
     const response = await axios.delete(`${baseUrl}/address/delete/${userId}/${addressId}`, { withCredentials: true });
     return response?.data;
 })

@@ -1,6 +1,6 @@
-const AddressModel = require("../models/address");
-const ErrorClass = require("../utils/ErrorClass");
-const TryCatch = require("../utils/tryCatch");
+const AddressModel = require("../../models/address");
+const ErrorClass = require("../../utils/ErrorClass");
+const TryCatch = require("../../utils/tryCatch");
 
 
 

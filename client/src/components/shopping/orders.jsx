@@ -30,7 +30,6 @@ const ShoppingOrders = () => {
     const handleOrderDetails = async (id) => {
         setOpenDetailsDialog(true)
         const detail = await getOrderDetails(id);
-        console.log(detail);
         setOrderDetail(detail?.data);
     }
 

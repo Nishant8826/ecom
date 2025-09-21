@@ -1,6 +1,6 @@
-const productModel = require("../models/Product");
-const ErrorClass = require("../utils/ErrorClass");
-const TryCatch = require("../utils/tryCatch");
+const productModel = require("../../models/Product");
+const ErrorClass = require("../../utils/ErrorClass");
+const TryCatch = require("../../utils/tryCatch");
 
 
 exports.searchProducts = TryCatch(async (req, res, next) => {

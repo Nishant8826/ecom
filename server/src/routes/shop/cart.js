@@ -1,5 +1,5 @@
 const express = require('express');
-const { addCart, fetchCart, deleteCart, updateCart } = require('../controllers/cart-controller');
+const { addCart, fetchCart, deleteCart, updateCart } = require('../../controllers/shop/cart');
 const cartRoutes = express.Router();
 
 cartRoutes.post('/add', addCart);

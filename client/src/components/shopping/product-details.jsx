@@ -83,7 +83,9 @@ const ProductDetailsDialog = ({ open, setOpen, productDetails }) => {
                 setReviewMsg("");
                 dispatch(getReviews(productDetails?._id));
                 toast({ title: "Review added successfully!", });
-            } 
+            } else {
+                toast({ title: "You need to purchase product to review it.", variant: 'destructive' });
+            }
         });
     }
 

@@ -46,12 +46,7 @@ const App = () => {
     <BrowserRouter>
       <Routes>
 
-        <Route path='' element={<Navigate to={'/auth/login'} />} />
-
-        <Route path='/auth' element={<ProtectedRoute isAuthenticated={isAuthenticated} user={user}><AuthLayout /></ProtectedRoute>}>
-          <Route path='login' element={<Login />} />
-          <Route path='signup' element={<Signup />} />
-        </Route>
+        <Route path='' element={<Navigate to={'/shop/home'} />} />
 
         <Route path='/admin' element={<ProtectedRoute isAuthenticated={isAuthenticated} user={user}><AdminLayout /></ProtectedRoute>}>
           <Route path='dashboard' element={<AdminDashboard />} />

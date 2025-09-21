@@ -1,25 +1,30 @@
-import { Navigate, useLocation } from "react-router-dom"
+import { Navigate, useLocation } from "react-router-dom";
 
 const ProtectedRoute = ({ isAuthenticated, user, children }) => {
-
     const location = useLocation();
 
-    if (!isAuthenticated && !(location.pathname.includes('login') || location.pathname.includes('signup'))) return <Navigate to={'/auth/login'} />
-
-    if (isAuthenticated && (location.pathname.includes('login') || location.pathname.includes('signup'))) {
-        if (user?.role == 'admin') {
-            return <Navigate to={'/admin/dashboard'} />
-        } else {
-            return <Navigate to={'/shop/home'} />
+    if (location.pathname === "/shop/home") {
+        if (!isAuthenticated) {
+            return <div>{children}</div>;
+        } else if (isAuthenticated && user?.role == "shop") {
+            return <Navigate to="/shop/home" replace />;
         }
     }
 
-    if (isAuthenticated && user?.role !== 'admin' && location.pathname.includes('admin')) return <Navigate to={'/unauth'} />
+    if (!isAuthenticated && location.pathname == "/admin/dashboard") {
+        return <Navigate to="/unauth" />;
+    }
 
-    if (isAuthenticated && user?.role === 'admin' && location.pathname.includes('shop')) return <Navigate to={'/admin/dashboard'} />
 
+    if (isAuthenticated && user?.role !== "admin" && location.pathname.includes("admin")) {
+        return <Navigate to="/unauth" />;
+    }
 
-    return <div>{children}</div>
-}
+    if (isAuthenticated && user?.role === "admin" && location.pathname.includes("shop")) {
+        return <Navigate to="/admin/dashboard" />;
+    }
 
-export default ProtectedRoute
+    return <div>{children}</div>;
+};
+
+export default ProtectedRoute;

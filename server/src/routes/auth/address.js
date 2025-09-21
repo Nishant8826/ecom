@@ -1,5 +1,5 @@
 const express = require('express');
-const { addAddress, fetchUserAddress, updateAddress, deleteAddress } = require('../controllers/address-controller');
+const { addAddress, fetchUserAddress, updateAddress, deleteAddress } = require('../../controllers/auth/address');
 const addressRouter = express.Router();
 
 

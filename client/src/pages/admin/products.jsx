@@ -36,7 +36,6 @@ const AdminProducts = () => {
   const [currentEditedId, setCurrentEditedId] = useState(null);
 
   const onSubmit = (e) => {
-    console.log(currentEditedId, "currentEditedId in onSubmit");
     e.preventDefault();
     currentEditedId == null ?
       dispatch(addNewProduct({ ...formData, image: uploadedImageUrl })).then((result) => {
@@ -128,6 +127,7 @@ const AdminProducts = () => {
             imageLoadingState={imageLoadingState}
             setImageLoadingState={setImageLoadingState}
             currentEditedId={currentEditedId}
+            setFormData={setFormData}
           />
           <div className="py-6">
             <CommonForm
