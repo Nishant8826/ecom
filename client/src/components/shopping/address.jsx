@@ -76,8 +76,12 @@ const Address = ({ setCurrentAddress, selectedId }) => {
         return Object.keys(formData).map((key) => formData[key].trim() !== "").every((item) => item);
     }
 
-    useEffect(() => {
+    const fetchAddress = () => {
         dispatch(fetchUserAddress(user?._id));
+    }
+
+    useEffect(() => {
+        fetchAddress();
     }, [dispatch]);
 
     return (

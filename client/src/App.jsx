@@ -23,6 +23,7 @@ import ShoppingHome from './pages/shopping/home'
 import StripeSuccess from './pages/shopping/success'
 import StripeCancel from './pages/shopping/cancel'
 import SearchProducts from './pages/shopping/search'
+import { fetchCart } from './store/cartSlice'
 
 const App = () => {
 
@@ -35,6 +36,13 @@ const App = () => {
     // Check authentication status on app load
     dispatch(checkAuth());
   }, [dispatch]);
+
+
+  useEffect(() => {
+    if (user && user._id) {
+      dispatch(fetchCart({ userId: user?._id }));
+    }
+  }, [user])
 
 
   if (isLoading) {

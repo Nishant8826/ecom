@@ -5,13 +5,16 @@ import { brandOptionsMap, categoryOptionsMap } from "@/config"
 import { useSelector } from "react-redux"
 import LoginModal from "@/pages/auth/loginModal"
 import { useEffect, useState } from "react"
+import SignupModal from "@/pages/auth/signupModal"
+import ForgetPasswordModal from "@/pages/auth/forgetPassword"
 
 const ShoppingProductTile = ({ product, handleGetProductDetails, handleAddtoCart }) => {
 
   const { user } = useSelector(state => state.auth);
-  const [loginOpen, setLoginOpen] = useState(false)
-  const [clickedProduct, setClickedProduct] = useState({})
-
+  const [clickedProduct, setClickedProduct] = useState({})  
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [signupOpen, setSignupOpen] = useState(false);
+  const [forgetPassword, setForgetPassword] = useState(false);
 
 
   const handleCart = (id, totalStock) => {
@@ -25,7 +28,7 @@ const ShoppingProductTile = ({ product, handleGetProductDetails, handleAddtoCart
 
   useEffect(() => {
     if (user && user._id && clickedProduct) {
-      handleAddtoCart(clickedProduct.id, clickedProduct.totalStock);
+      // handleAddtoCart(clickedProduct.id, clickedProduct.totalStock);
       setClickedProduct(null);
       setLoginOpen(false);
     }
@@ -85,7 +88,9 @@ const ShoppingProductTile = ({ product, handleGetProductDetails, handleAddtoCart
             </Button>
         }
       </CardFooter>
-      <LoginModal open={loginOpen} onClose={setLoginOpen} />
+      {loginOpen && <LoginModal open={loginOpen} onClose={setLoginOpen} setSignupOpen={setSignupOpen} setForgetPassword={setForgetPassword} />}
+      {forgetPassword && <ForgetPasswordModal open={forgetPassword} onClose={setForgetPassword} setLoginOpen={setLoginOpen} />}
+      {signupOpen && <SignupModal open={signupOpen} onClose={setSignupOpen} setLoginOpen={setLoginOpen} />}
     </Card>
 
 

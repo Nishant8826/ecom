@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt");
 const userModel = require("../../models/user");
 const ErrorClass = require("../../utils/ErrorClass");
 const jwt = require("jsonwebtoken");
+const { sendWelcomeEmail } = require("../../services/mailerServices");
+const config = require("../../config/config");
 
 // signup controller
 const signup = TryCatch(async (req, res, next) => {
@@ -14,8 +16,9 @@ const signup = TryCatch(async (req, res, next) => {
     if (existimgEmail) return next(new ErrorClass("Email already exists", 200));
     const hashedPassword = await bcrypt.hash(password, 12);
     const user = await userModel.create({ userName, email, password: hashedPassword });
-    const token = await jwt.sign(user.toObject(), 'ECOMMERCE_SECRET', { expiresIn: '1h' });
-    res.status(201).json({ success: true, message: 'User registered successfully', user, token });
+    await sendWelcomeEmail(user);
+    const token = await jwt.sign(user.toObject(), config.jwtSecret, { expiresIn: '1h' });
+    res.cookie('token', token, { httpOnly: true, secure: false }).json({ success: true, message: 'User logged in successfully', user });
 });
 
 // login controller
@@ -26,7 +29,7 @@ const login = TryCatch(async (req, res, next) => {
     if (!user) return next(new ErrorClass("User not found", 404));
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return next(new ErrorClass("Password is incorrect", 401));
-    const token = await jwt.sign(user.toObject(), 'ECOMMERCE_SECRET', { expiresIn: '1h' });
+    const token = await jwt.sign(user.toObject(), config.jwtSecret, { expiresIn: '1h' });
     res.cookie('token', token, { httpOnly: true, secure: false }).json({ success: true, message: 'User logged in successfully', user });
 });
 

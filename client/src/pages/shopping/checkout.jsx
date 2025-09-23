@@ -19,7 +19,7 @@ function ShoppingCheckout() {
 
   let totalCartAmount = 0;
 
-  cartItems.items.forEach(item => {
+  cartItems && cartItems.length > 0 && cartItems.items.forEach(item => {
     const price = item.salePrice > 0 ? item.salePrice : item.price;
     totalCartAmount = totalCartAmount + (price * item.quantity)
   })

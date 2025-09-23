@@ -10,19 +10,26 @@ import { Skeleton } from '../ui/skeleton'
 import { Badge } from '../ui/badge'
 import { formatDateTime } from '@/utils/formatDate'
 import { statusStyles } from '@/utils/orderStatusStyles'
+import { useToast } from '@/hooks/use-toast'
 
 const ShoppingOrders = () => {
     const { user } = useSelector(state => state.auth);
     const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
     const [orders, setOrders] = useState([]);
     const [orderDetail, setOrderDetail] = useState(null);
+    const { toast } = useToast();
 
     const getAllOrders = async () => {
         try {
             const orders = await getAllOrdersByUser(user._id);
             setOrders(orders?.data);
         } catch (error) {
-            console.log('error - getAllOrders:', error)
+            if (error?.response?.data?.success == false) {
+                toast({
+                    title: error?.response?.data?.message || 'Internal Server Error',
+                    variant: "destructive",
+                });
+            }
         }
 
     }
