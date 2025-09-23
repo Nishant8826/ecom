@@ -14,8 +14,13 @@ export const addAddress = createAsyncThunk('/address/add', async (formData) => {
 
 
 export const fetchUserAddress = createAsyncThunk('/address/fetchUserAddress', async (userId) => {
-    const response = await axios.get(`${baseUrl}/address/get/${userId}`, { withCredentials: true });
-    return response?.data;
+    try {
+        const response = await axios.get(`${baseUrl}/address/get/${userId}`, { withCredentials: true });
+        return response?.data;
+    } catch (error) {
+        console.log('error',error)
+        throw error;
+    }
 })
 
 
@@ -47,7 +52,7 @@ const addressSlice = createSlice({
         }).addCase(fetchUserAddress.fulfilled, (state, action) => {
             state.isLoading = false;
             state.addressList = action?.payload?.data;
-        }).addCase(fetchUserAddress.rejected, (state) => {
+        }).addCase(fetchUserAddress.rejected, (state,action) => {
             state.isLoading = false;
         })
     }

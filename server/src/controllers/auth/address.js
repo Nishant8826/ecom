@@ -17,7 +17,7 @@ const fetchUserAddress = TryCatch(async (req, res, next) => {
     if (!userId) return next(new ErrorClass('Invalid data!', 400));
 
     const addressList = await AddressModel.find({ userId });
-    if (!addressList || addressList.length == 0) return next(new ErrorClass('Address not found!', 404));
+    if (!addressList || addressList.length == 0) return res.status(404).json({ success: false, message: 'No Address Found!' });
 
     return res.status(200).json({ success: true, data: addressList, message: 'Address fetched successfully' });
 

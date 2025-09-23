@@ -3,11 +3,15 @@ import React from 'react'
 import { Button } from '../ui/button'
 import { useDispatch } from 'react-redux'
 import { logout } from '@/store/authSlice'
+import { emptyCart } from '@/store/cartSlice'
 
 const AdminHeader = ({ setOpen }) => {
   const dispatch = useDispatch();
   const handleLogout = () => {
-    dispatch(logout());
+    dispatch(logout()).then(()=>{
+      dispatch(emptyCart());
+    })
+
   }
   return (
     <header className="flex items-center justify-between px-4 py-3 bg-background border-b">

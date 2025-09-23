@@ -13,14 +13,17 @@ const initialState = {
     password: ""
 }
 
-const LoginModal = ({ open, onClose, setSignupOpen }) => {
-    const [formData, setFormData] = useState(initialState)
+const LoginModal = ({ open, onClose, setSignupOpen, setForgetPassword }) => {
+    const [formData, setFormData] = useState(initialState);
+    const [loading, setLoading] = useState(false)
     const dispatch = useDispatch()
     const { toast } = useToast()
 
-    const onSubmit = (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault()
-        dispatch(loginUser(formData)).then((data) => {
+        setLoading(true)
+        try {
+            const data = await dispatch(loginUser(formData))
             if (data?.payload?.success) {
                 toast({
                     title: "Login Successful",
@@ -35,12 +38,21 @@ const LoginModal = ({ open, onClose, setSignupOpen }) => {
                     description: data?.payload?.message || "Something went wrong"
                 })
             }
-        })
+        } finally {
+            setLoading(false)
+        }
     }
 
     const handleSignupBtn = () => {
         onClose(false);
         setSignupOpen(true)
+        setForgetPassword(false);
+    }
+
+    const handleForgetPasswordBtn = () => {
+        onClose(false);
+        setSignupOpen(false)
+        setForgetPassword(true);
     }
 
     return (
@@ -56,24 +68,36 @@ const LoginModal = ({ open, onClose, setSignupOpen }) => {
                 </DialogHeader>
 
                 <div className="space-y-6 mt-4">
-                    <CommonForm formControls={loginForm} buttonText={"Login"} formData={formData} setFormData={setFormData} onSubmit={onSubmit} />
+                    {
+                        loading ? (
+                            <div className="space-y-4">
+                                <Skeleton className="h-10 w-full rounded-md" />
+                                <Skeleton className="h-10 w-full rounded-md" />
+                                <Skeleton className="h-10 w-full rounded-md" />
+                            </div>
+                        ) : (
+                            <>
+                                <CommonForm formControls={loginForm} buttonText={"Login"} formData={formData} setFormData={setFormData} onSubmit={onSubmit} />
+                                <div className="flex justify-end">
+                                    <button type="button" onClick={() => handleForgetPasswordBtn()} className="hover:text-indigo-400 text-sm text-gray-400 relative cursor-pointer text-md font-medium after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-indigo-400 after:transition-all after:duration-500 hover:after:w-full" >
+                                        Forgot password?
+                                    </button>
+                                </div>
+                                <p className="border border-b"></p>
+                                <div className="flex justify-center text-sm text-gray-400">
+                                    <span>Don't Have an account? </span>
+                                    <button type="button" onClick={() => handleSignupBtn()} className="hover:text-indigo-400 text-sm text-gray-400 relative cursor-pointer text-md font-medium after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-indigo-400 after:transition-all after:duration-500 hover:after:w-full" >
+                                        Create account
+                                    </button>
+                                </div>
+                            </>
+                        )
+                    }
 
-                    <div className="flex justify-end text-sm text-gray-400">
-                        <button type="button" className="hover:text-indigo-400 transition" >
-                            Forgot password?
-                        </button>
-                    </div>
-                    <p className="border border-b"></p>
-                    <div className="flex justify-center text-sm text-gray-400">
-                        <span>Don't Have an account? </span>
-                        <button type="button" onClick={() => handleSignupBtn()} className="hover:text-indigo-400 transition ml-1 text-gray-600 font-semibold" >
-                            Create account
-                        </button>
-                    </div>
                 </div>
             </DialogContent>
 
-        </Dialog>
+        </Dialog >
     )
 }
 

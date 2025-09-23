@@ -10,9 +10,10 @@ import { logout } from '@/store/authSlice'
 import { Avatar, AvatarFallback } from '../ui/avatar'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '../ui/dropdown-menu'
 import UserCartWrapper from './cart-wrapper'
-import { fetchCart } from '@/store/cartSlice'
+import { emptyCart } from '@/store/cartSlice'
 import LoginModal from '@/pages/auth/loginModal'
 import SignupModal from '@/pages/auth/signupModal'
+import ForgetPasswordModal from '@/pages/auth/forgetPassword'
 
 
 const MenuItems = () => {
@@ -47,26 +48,23 @@ const HeaderRightContent = () => {
   const { user } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.shopCart);
   const [openCartSheet, setOpenCartSheet] = useState(false);
-  const [loginOpen, setLoginOpen] = useState(false)
-  const [signupOpen, setSignupOpen] = useState(false)
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [signupOpen, setSignupOpen] = useState(false);
+  const [forgetPassword, setForgetPassword] = useState(false);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    dispatch(logout());
+    dispatch(logout()).then(() => {
+      dispatch(emptyCart())
+    })
   }
 
   const handleLogIn = () => {
-    // dispatch(logout());
     setSignupOpen(false);
     setLoginOpen(true);
   }
-
-  useEffect(() => {
-    if (user && user._id) {
-      dispatch(fetchCart({ userId: user?._id }));
-    }
-  }, [dispatch]);
 
   return (
     <div className="flex lg:items-center lg:flex-row flex-col gap-4">
@@ -107,7 +105,8 @@ const HeaderRightContent = () => {
         <Button onClick={handleLogIn} variant="outline" size="icon"><LogIn /></Button>
       )}
 
-      {loginOpen && <LoginModal open={loginOpen} onClose={setLoginOpen} setSignupOpen={setSignupOpen} />}
+      {loginOpen && <LoginModal open={loginOpen} onClose={setLoginOpen} setSignupOpen={setSignupOpen} setForgetPassword={setForgetPassword} />}
+      {forgetPassword && <ForgetPasswordModal open={forgetPassword} onClose={setForgetPassword} setLoginOpen={setLoginOpen} />}
       {signupOpen && <SignupModal open={signupOpen} onClose={setSignupOpen} setLoginOpen={setLoginOpen} />}
     </div>
   );
