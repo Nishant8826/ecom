@@ -5,8 +5,7 @@ import { loginForm } from "@/config"
 import { useToast } from "@/hooks/use-toast"
 import { useDispatch } from "react-redux"
 import { loginUser } from "@/store/authSlice"
-import { LogIn } from "lucide-react"
-import SignupModal from "./signupModal"
+import { AuthSkeleton } from "./authSkeleton"
 
 const initialState = {
     email: "",
@@ -58,25 +57,23 @@ const LoginModal = ({ open, onClose, setSignupOpen, setForgetPassword }) => {
     return (
         <Dialog open={open} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-md rounded-2xl p-6 text-black">
-                <DialogHeader className="text-center space-y-2">
-                    <DialogTitle className="text-xl font-semibold text-black">
-                        Login to your account
-                    </DialogTitle>
-                    <p className="text-sm text-gray-400">
-                        Enter your credentials to continue
-                    </p>
-                </DialogHeader>
-
-                <div className="space-y-6 mt-4">
-                    {
-                        loading ? (
-                            <div className="space-y-4">
-                                <Skeleton className="h-10 w-full rounded-md" />
-                                <Skeleton className="h-10 w-full rounded-md" />
-                                <Skeleton className="h-10 w-full rounded-md" />
-                            </div>
-                        ) : (
-                            <>
+                {
+                    loading ? (
+                        <>
+                            <DialogTitle></DialogTitle>
+                            <AuthSkeleton />
+                        </>
+                    ) : (
+                        <>
+                            <DialogHeader className="text-center space-y-2">
+                                <DialogTitle className="text-xl font-semibold text-black">
+                                    Login to your account
+                                </DialogTitle>
+                                <p className="text-sm text-gray-400">
+                                    Enter your credentials to continue
+                                </p>
+                            </DialogHeader>
+                            <div className="space-y-6 mt-4">
                                 <CommonForm formControls={loginForm} buttonText={"Login"} formData={formData} setFormData={setFormData} onSubmit={onSubmit} />
                                 <div className="flex justify-end">
                                     <button type="button" onClick={() => handleForgetPasswordBtn()} className="hover:text-indigo-400 text-sm text-gray-400 relative cursor-pointer text-md font-medium after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-indigo-400 after:transition-all after:duration-500 hover:after:w-full" >
@@ -86,15 +83,14 @@ const LoginModal = ({ open, onClose, setSignupOpen, setForgetPassword }) => {
                                 <p className="border border-b"></p>
                                 <div className="flex justify-center text-sm text-gray-400">
                                     <span>Don't Have an account? </span>
-                                    <button type="button" onClick={() => handleSignupBtn()} className="hover:text-indigo-400 text-sm text-gray-400 relative cursor-pointer text-md font-medium after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-indigo-400 after:transition-all after:duration-500 hover:after:w-full" >
+                                    <button type="button" onClick={() => handleSignupBtn()} className="hover:text-indigo-400 text-sm text-gray-400 relative cursor-pointer text-md font-medium after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-[2px] after:w-0 after:bg-indigo-400 after:transition-all after:duration-500 hover:after:w-full ml-1" >
                                         Create account
                                     </button>
                                 </div>
-                            </>
-                        )
-                    }
-
-                </div>
+                            </div>
+                        </>
+                    )
+                }
             </DialogContent>
 
         </Dialog >

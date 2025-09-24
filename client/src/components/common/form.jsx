@@ -41,7 +41,6 @@ const CommonForm = ({ formControls, formData, setFormData, onSubmit, buttonText,
                 element = <Input className='rounded-[5px] border-gray-200 placeholder:text-gray-400' name={item.name} type={item.type} placeholder={item.placeholder} key={item.name} value={value} onChange={e => setFormData({ ...formData, [item.name]: e.target.value })} />
                 break;
         }
-
         return element;
     }
 

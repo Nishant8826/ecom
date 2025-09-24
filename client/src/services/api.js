@@ -69,5 +69,14 @@ export const updateOrderByAdmin = async (id, orderStatus) => {
     }
 }
 
+export const isEmailExist = async ({ email }) => {
+    try {
+        const resp = await api.post(`/common/is-email-exist`, { email }, { withCredentials: true });
+        return resp.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
 
 export default api;

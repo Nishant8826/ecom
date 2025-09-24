@@ -20,6 +20,7 @@ const reviewRoutes = require('./routes/shop/review');
 const searchRoutes = require('./routes/shop/search');
 const shopRoutes = require('./routes/shop/shop');
 const carouselRoutes = require('./routes/common/Carousel');
+const emailExistRoute = require('./routes/common/emailExist');
 
 
 
@@ -55,6 +56,8 @@ app.use('/api/v1/shop/review', reviewRoutes);
 
 app.use('/api/v1/order', orderRoutes);
 app.use('/stripe', webhookRoute);
+
+app.use('/api/v1/common', emailExistRoute);
 
 app.use(errorHandler);
 
