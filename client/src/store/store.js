@@ -8,6 +8,7 @@ import adminOrderSlice from "./adminOrderSlice";
 import searchProductSlice from "./searchProductSlice";
 import reviewSlice from "./reviewSlice";
 import carouselSlice from "./carouselSlice";
+import adminUserSlice from "./adminUsersSlice";
 
 const store = configureStore({
     reducer: {
@@ -19,7 +20,8 @@ const store = configureStore({
         adminOrder: adminOrderSlice,
         searchProduct: searchProductSlice,
         productReview: reviewSlice,
-        carousel: carouselSlice
+        carousel: carouselSlice,
+        adminUser: adminUserSlice
     }
 })
 

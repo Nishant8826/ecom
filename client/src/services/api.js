@@ -105,5 +105,14 @@ export const resetPassword = async (request) => {
     }
 }
 
+export const fetchAllUsersByAdmin = async () => {
+    try {
+        const resp = await api.get(`/admin/users/fetch-all`, { withCredentials: true });
+        return resp.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
 
 export default api;
