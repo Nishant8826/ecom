@@ -78,5 +78,32 @@ export const isEmailExist = async ({ email }) => {
     }
 }
 
+export const sendForgetPswrdOtp = async ({ email }) => {
+    try {
+        const resp = await api.post(`/otp/forget-password`, { email }, { withCredentials: true });
+        return resp.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const verifyOtpForPswrd = async (request) => {
+    try {
+        const resp = await api.post(`/otp/verify-otp`, request, { withCredentials: true });
+        return resp.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const resetPassword = async (request) => {
+    try {
+        const resp = await api.post(`/otp/reset-password`, request, { withCredentials: true });
+        return resp.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
 
 export default api;

@@ -11,6 +11,8 @@ import { fetchAllFilteredProducts, fetchProductDetail } from "@/store/shopProduc
 import { addCart, fetchCart } from "@/store/cartSlice";
 import { getCarousel } from "@/store/carouselSlice";
 import { motion, useScroll } from "motion/react"
+import { theme } from "@/config";
+import { Footer } from "@/components/common/footer";
 
 const categoriesWithIcon = [
   { id: "men", label: "Men", icon: ShirtIcon },
@@ -28,6 +30,11 @@ const brandsWithIcon = [
   { id: "zara", label: "Zara", icon: Images },
   { id: "h&m", label: "H&M", icon: Heater },
 ];
+
+const sectionVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0 },
+};
 
 const ShoppingHome = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -102,8 +109,8 @@ const ShoppingHome = () => {
           right: 0,
           height: 15,
           originX: 0,
-          backgroundColor: "black",
-          zIndex:100
+          backgroundColor: theme.primary,
+          zIndex: 100
         }}
       />
       <>
@@ -114,48 +121,56 @@ const ShoppingHome = () => {
               carouselImageList.map((item, index) => (<img src={item.image} key={item._id} className={`${index === currentSlide ? "opacity-100" : "opacity-0"} absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`} />))
               : null}
             <Button variant="outline" size="icon" onClick={() => setCurrentSlide((prevSlide) => (prevSlide - 1 + carouselImageList.length) % carouselImageList.length)} className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white/80" >
-              <ChevronLeftIcon className="w-4 h-4" />
+              <motion.button whileHover={{ scale: 1.8, transition: { duration: 0.1 } }} transition={{ duration: 0.5 }}>
+                <ChevronLeftIcon className="w-4 h-4" />
+              </motion.button>
             </Button>
             <Button variant="outline" size="icon" onClick={() => setCurrentSlide((prevSlide) => (prevSlide + 1) % carouselImageList.length)}
               className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white/80" >
-              <ChevronRightIcon className="w-4 h-4" />
+              <motion.button whileHover={{ scale: 1.8, transition: { duration: 0.1 } }} transition={{ duration: 0.5 }}>
+                <ChevronRightIcon className="w-4 h-4" />
+              </motion.button>
             </Button>
           </div>
-          <section className="py-12 bg-gray-50">
+          <motion.section className="py-12 bg-gray-50" variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.8 }}>
             <div className="container mx-auto px-4">
               <h2 className="text-3xl font-bold text-center mb-8">
                 Shop by category
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 {categoriesWithIcon.map((categoryItem) => (
-                  <Card key={categoryItem.id} onClick={() => handleNavigateToListingPage(categoryItem, "category")} className="cursor-pointer hover:shadow-lg transition-shadow">
-                    <CardContent className="flex flex-col items-center justify-center p-6">
-                      <categoryItem.icon className="w-12 h-12 mb-4 text-primary" />
-                      <span className="font-bold">{categoryItem.label}</span>
-                    </CardContent>
-                  </Card>
+                  <motion.button key={categoryItem.id} whileHover={{ scale: 1.1, transition: { duration: 0.1 } }} transition={{ duration: 0.5 }}>
+                    <Card onClick={() => handleNavigateToListingPage(categoryItem, "category")} className="cursor-pointer hover:shadow-lg transition-shadow">
+                      <CardContent className="flex flex-col items-center justify-center p-6">
+                        <categoryItem.icon className="w-12 h-12 mb-4 text-primary" />
+                        <span className="font-bold">{categoryItem.label}</span>
+                      </CardContent>
+                    </Card>
+                  </motion.button>
                 ))}
               </div>
             </div>
-          </section>
+          </motion.section>
 
-          <section className="py-12 bg-gray-50">
+          <motion.section className="py-12 bg-gray-50" variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.8 }}>
             <div className="container mx-auto px-4">
               <h2 className="text-3xl font-bold text-center mb-8">Shop by Brand</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 {brandsWithIcon.map((brandItem) => (
-                  <Card key={brandItem.id} onClick={() => handleNavigateToListingPage(brandItem, "brand")} className="cursor-pointer hover:shadow-lg transition-shadow">
-                    <CardContent className="flex flex-col items-center justify-center p-6">
-                      <brandItem.icon className="w-12 h-12 mb-4 text-primary" />
-                      <span className="font-bold">{brandItem.label}</span>
-                    </CardContent>
-                  </Card>
+                  <motion.button key={brandItem.id} whileHover={{ scale: 1.1, transition: { duration: 0.1 } }} transition={{ duration: 0.5 }}>
+                    <Card onClick={() => handleNavigateToListingPage(brandItem, "brand")} className="cursor-pointer hover:shadow-lg transition-shadow">
+                      <CardContent className="flex flex-col items-center justify-center p-6">
+                        <brandItem.icon className="w-12 h-12 mb-4 text-primary" />
+                        <span className="font-bold">{brandItem.label}</span>
+                      </CardContent>
+                    </Card>
+                  </motion.button>
                 ))}
               </div>
             </div>
-          </section>
+          </motion.section>
 
-          <section className="py-12">
+          <motion.section className="py-12 bg-gray-50" variants={sectionVariants} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }} transition={{ duration: 0.8 }}>
             <div className="container mx-auto px-4">
               <h2 className="text-3xl font-bold text-center mb-8">
                 Feature Products
@@ -168,12 +183,13 @@ const ShoppingHome = () => {
                   : null}
               </div>
             </div>
-          </section>
+          </motion.section>
           <ProductDetailsDialog open={openDetailsDialog} setOpen={setOpenDetailsDialog} productDetails={productDetails} />
 
         </div>
       </>
 
+      <Footer />
     </>
   );
 }

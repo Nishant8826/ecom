@@ -4,7 +4,7 @@ const TryCatch = require("../../utils/tryCatch");
 
 
 const getAllfilteredProducts = TryCatch(async (req, res, next) => {
-    const { brand = [], category = [], sortBy } = req.query;
+    const { brand = [], category = [], sortBy, } = req.query;
     const filters = {};
 
     if (brand.length > 0) {

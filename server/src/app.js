@@ -21,6 +21,7 @@ const searchRoutes = require('./routes/shop/search');
 const shopRoutes = require('./routes/shop/shop');
 const carouselRoutes = require('./routes/common/Carousel');
 const emailExistRoute = require('./routes/common/emailExist');
+const otpRouter = require('./routes/auth/otp');
 
 
 
@@ -44,6 +45,7 @@ app.use(express.json());
 
 // routes
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/otp', otpRouter);
 app.use('/api/v1/address', addressRouter);
 app.use('/api/v1/admin/product', adminRoutes);
 app.use('/api/v1/admin/order', adminOrder);

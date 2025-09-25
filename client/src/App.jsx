@@ -1,8 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import './App.css'
-import AuthLayout from './components/auth/layout'
-import Login from './pages/auth/login'
-import Signup from './pages/auth/signup'
 import AdminLayout from './components/admin/layout'
 import AdminDashboard from './pages/admin/dashboard'
 import AdminFeatures from './pages/admin/features'

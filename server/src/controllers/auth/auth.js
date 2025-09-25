@@ -40,5 +40,4 @@ const logout = TryCatch(async (req, res) => {
 
 
 
-
 module.exports = { signup, login, logout };

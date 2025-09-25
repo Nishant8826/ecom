@@ -30,3 +30,23 @@ exports.sendWelcomeEmail = async (user) => {
         console.error("Error sending email:", err);
     }
 }
+
+exports.forgotPasswordOtp = async (user) => {
+    try {
+        let templatePath = path.join(__dirname, "templates/forgotPassword.template");
+        let htmlContent = fs.readFileSync(templatePath, "utf8");
+
+        htmlContent = htmlContent.replace(/{{otp}}/g, user.otp);
+
+        let info = await transporter.sendMail({
+            from: '"Support" <devstore@gmail.com>',
+            to: user.email,
+            subject: "Password Reset OTP",
+            html: htmlContent,
+        });
+
+        console.log("Message sent: %s", info.messageId);
+    } catch (err) {
+        console.error("Error sending email:", err);
+    }
+}

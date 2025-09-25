@@ -14,6 +14,7 @@ import { emptyCart } from '@/store/cartSlice'
 import LoginModal from '@/pages/auth/loginModal'
 import SignupModal from '@/pages/auth/signupModal'
 import ForgetPasswordModal from '@/pages/auth/forgetPassword'
+import { motion } from "motion/react"
 
 
 const MenuItems = () => {
@@ -69,12 +70,14 @@ const HeaderRightContent = () => {
   return (
     <div className="flex lg:items-center lg:flex-row flex-col gap-4">
       <Sheet open={openCartSheet} onOpenChange={() => setOpenCartSheet(false)}>
-        <Button variant="outline" size="icon" className="relative" onClick={() => setOpenCartSheet(true)}>
-          <ShoppingCart className="w-6 h-6" />
-          {cartItems?.items?.length > 0 && (
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full">{cartItems.items.length}</span>
-          )}
-        </Button>
+        <motion.button whileHover={{ scale: 1.1, transition: { duration: 0.1 } }} transition={{ duration: 0.5 }}>
+          <Button variant="outline" size="icon" className="relative  border-primary" onClick={() => setOpenCartSheet(true)}>
+            <ShoppingCart className="w-6 h-6" />
+            {cartItems?.items?.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full">{cartItems.items.length}</span>
+            )}
+          </Button>
+        </motion.button>
         <UserCartWrapper setOpenCartSheet={setOpenCartSheet} cartItems={cartItems && cartItems.items && cartItems.items.length > 0 ? cartItems.items : []}
         />
       </Sheet>
@@ -82,11 +85,14 @@ const HeaderRightContent = () => {
       {user?.userName ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Avatar>
-              <AvatarFallback >
-                <CircleUserRound height={40} width={40} strokeWidth={0.7} />
-              </AvatarFallback>
-            </Avatar>
+            <motion.button whileHover={{ scale: 1.1, transition: { duration: 0.1 } }} transition={{ duration: 0.5 }}>
+
+              <Avatar>
+                <AvatarFallback >
+                  <CircleUserRound height={40} width={40} strokeWidth={0.7} className='hover:cursor-pointer' />
+                </AvatarFallback>
+              </Avatar>
+            </motion.button>
           </DropdownMenuTrigger>
           <DropdownMenuContent side="right" className="w-60 bg-white">
             <DropdownMenuLabel>Logged in as {user?.userName}</DropdownMenuLabel>
@@ -102,7 +108,9 @@ const HeaderRightContent = () => {
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (
-        <Button onClick={handleLogIn} variant="outline" size="icon"><LogIn /></Button>
+        <motion.button whileHover={{ scale: 1.1, transition: { duration: 0.1 } }} transition={{ duration: 0.5 }}>
+          <Button onClick={handleLogIn} variant="outline" size="icon" className='border-primary'><LogIn /></Button>
+        </motion.button>
       )}
 
       {loginOpen && <LoginModal open={loginOpen} onClose={setLoginOpen} setSignupOpen={setSignupOpen} setForgetPassword={setForgetPassword} />}

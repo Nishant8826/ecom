@@ -2,6 +2,8 @@ import { filterOptions } from "@/config";
 import { Fragment } from "react";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
+import { motion } from "motion/react"
+
 
 const ProductFilter = ({ filters, setFilters, handleFilter }) => {
 
@@ -17,10 +19,12 @@ const ProductFilter = ({ filters, setFilters, handleFilter }) => {
               <h3 className="text-base font-bold capitalize">{keyItem}</h3>
               <div className="grid gap-2 mt-2">
                 {filterOptions[keyItem].map((option, id) => (
-                  <Label key={id} className="flex font-medium items-center gap-2 ">
-                    <Checkbox onCheckedChange={() => handleFilter(keyItem, option.id)} checked={filters && Object.keys(filters).length > 0 && filters[keyItem] && filters[keyItem].indexOf(option.id) != -1} />
-                    {option.label}
-                  </Label>
+                  <motion.button whileHover={{ scale: 1.05, transition: { duration: 0.1 } }} transition={{ duration: 0.5 }}>
+                    <Label key={id} className="flex font-medium items-center gap-2 hover:cursor-pointer">
+                      <Checkbox onCheckedChange={() => handleFilter(keyItem, option.id)} checked={filters && Object.keys(filters).length > 0 && filters[keyItem] && filters[keyItem].indexOf(option.id) != -1} />
+                      {option.label}
+                    </Label>
+                  </motion.button>
                 ))}
                 <div className="border-b border-gray-200 mt-4"></div>
               </div>

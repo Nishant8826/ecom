@@ -1,44 +1,5 @@
 export const baseUrl = 'http://localhost:5000/api/v1';
 
-export const registerationForm = [
-    {
-        name: 'userName',
-        label: 'User Name',
-        placeholder: 'Enter your user name',
-        componentType: 'input',
-        type: 'text'
-    },
-    {
-        name: 'email',
-        label: 'Email',
-        placeholder: 'Enter your email',
-        componentType: 'input',
-        type: 'email'
-    },
-    {
-        name: 'password',
-        label: 'Password',
-        placeholder: 'Enter your password',
-        componentType: 'input',
-        type: 'password'
-    },
-]
-export const loginForm = [
-    {
-        name: 'email',
-        label: 'Email',
-        placeholder: 'Enter your email',
-        componentType: 'input',
-        type: 'email'
-    },
-    {
-        name: 'password',
-        label: 'Password',
-        placeholder: 'Enter your password',
-        componentType: 'input',
-        type: 'password'
-    },
-]
 
 export const forgetPasswordForm = [
     {
@@ -250,3 +211,15 @@ export const addressFormControls = [
         placeholder: "Enter any additional notes",
     },
 ];
+
+export const theme = {
+    primary: '#000',
+    secondary: '#22C55E',
+    background: '#fff',
+    textPrimary: '#000',
+    textSecondary: '#B9B4E4',
+    danger: '#EF4444',
+    success: '#10B981',
+    warning: '#F59E0B',
+    NeutralGray: '#E6E6E6',
+}

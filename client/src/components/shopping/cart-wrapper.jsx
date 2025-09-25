@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 import UserCartItemsContent from "./cart-items-content";
+import { motion } from "motion/react"
+
 
 const UserCartWrapper = ({ cartItems, setOpenCartSheet }) => {
 
@@ -28,12 +30,12 @@ const UserCartWrapper = ({ cartItems, setOpenCartSheet }) => {
                     <span className="font-bold">${totalCartAmount}</span>
                 </div>
             </div>
-            <Button onClick={() => {
+            <motion.button whileHover={{ scale: 1.1, transition: { duration: 0.1 } }} transition={{ duration: 0.5 }} className="w-full mt-6 bg-primary text-white py-2 rounded-md" onClick={() => {
                 navigate('/shop/checkout')
                 setOpenCartSheet(false);
-            }} className="w-full mt-6" >
+            }}>
                 Checkout
-            </Button>
+            </motion.button>
         </SheetContent>
     );
 }
