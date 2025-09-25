@@ -3,6 +3,8 @@ import { Button } from "../ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCart, updateCart } from "@/store/cartSlice";
 import { useToast } from "@/hooks/use-toast";
+import { motion } from "motion/react"
+
 
 const UserCartItemsContent = ({ cartItem }) => {
     const { user } = useSelector(state => state.auth);
@@ -80,7 +82,9 @@ const UserCartItemsContent = ({ cartItem }) => {
                 <p className="font-semibold">
                     ${((cartItem?.salePrice > 0 ? cartItem?.salePrice : cartItem?.price) * cartItem?.quantity).toFixed(2)}
                 </p>
-                <Trash onClick={() => handleDelete(cartItem)} className="cursor-pointer mt-1" size={20} />
+                <motion.button whileHover={{ scale: 1.1, transition: { duration: 0.1 } }} transition={{ duration: 0.5 }} className="hover:text-red-700 transition-colors" whileTap={{ scale: 0.95 }}>
+                    <Trash onClick={() => handleDelete(cartItem)} className="cursor-pointer mt-1" size={20} />
+                </motion.button>
             </div>
         </div>
     );

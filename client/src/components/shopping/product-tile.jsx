@@ -7,11 +7,13 @@ import LoginModal from "@/pages/auth/loginModal"
 import { useEffect, useState } from "react"
 import SignupModal from "@/pages/auth/signupModal"
 import ForgetPasswordModal from "@/pages/auth/forgetPassword"
+import { motion } from "motion/react"
+
 
 const ShoppingProductTile = ({ product, handleGetProductDetails, handleAddtoCart }) => {
 
   const { user } = useSelector(state => state.auth);
-  const [clickedProduct, setClickedProduct] = useState({})  
+  const [clickedProduct, setClickedProduct] = useState({})
   const [loginOpen, setLoginOpen] = useState(false);
   const [signupOpen, setSignupOpen] = useState(false);
   const [forgetPassword, setForgetPassword] = useState(false);
@@ -78,23 +80,23 @@ const ShoppingProductTile = ({ product, handleGetProductDetails, handleAddtoCart
         </CardContent>
       </div>
       <CardFooter>
-        {
-          product?.totalStock == 0 ?
-            <Button className="w-full cursor-not-allowed opacity-65">
-              Out of Stock
-            </Button> :
-            <Button className="w-full" onClick={() => handleCart(product?._id, product?.totalStock)}>
-              Add to cart
-            </Button>
-        }
+        <motion.button whileHover={{ scale: 1.1, transition: { duration: 0.1 } }} transition={{ duration: 0.5 }} className="w-full ">
+
+          {
+            product?.totalStock == 0 ?
+              <Button className="w-full cursor-not-allowed opacity-65">
+                Out of Stock
+              </Button> :
+              <Button className="w-full" onClick={() => handleCart(product?._id, product?.totalStock)}>
+                Add to cart
+              </Button>
+          }
+        </motion.button>
       </CardFooter>
       {loginOpen && <LoginModal open={loginOpen} onClose={setLoginOpen} setSignupOpen={setSignupOpen} setForgetPassword={setForgetPassword} />}
       {forgetPassword && <ForgetPasswordModal open={forgetPassword} onClose={setForgetPassword} setLoginOpen={setLoginOpen} />}
       {signupOpen && <SignupModal open={signupOpen} onClose={setSignupOpen} setLoginOpen={setLoginOpen} />}
     </Card>
-
-
-
   )
 }
 

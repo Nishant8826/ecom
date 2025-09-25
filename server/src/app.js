@@ -20,6 +20,9 @@ const reviewRoutes = require('./routes/shop/review');
 const searchRoutes = require('./routes/shop/search');
 const shopRoutes = require('./routes/shop/shop');
 const carouselRoutes = require('./routes/common/Carousel');
+const emailExistRoute = require('./routes/common/emailExist');
+const otpRouter = require('./routes/auth/otp');
+const adminUserRoutes = require('./routes/admin/users');
 
 
 
@@ -43,10 +46,13 @@ app.use(express.json());
 
 // routes
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/otp', otpRouter);
 app.use('/api/v1/address', addressRouter);
+app.use('/api/v1/carousel', carouselRoutes);
+
 app.use('/api/v1/admin/product', adminRoutes);
 app.use('/api/v1/admin/order', adminOrder);
-app.use('/api/v1/carousel', carouselRoutes);
+app.use('/api/v1/admin/users', adminUserRoutes);
 
 app.use('/api/v1/shop/product', shopRoutes);
 app.use('/api/v1/shop/search', searchRoutes);
@@ -55,6 +61,8 @@ app.use('/api/v1/shop/review', reviewRoutes);
 
 app.use('/api/v1/order', orderRoutes);
 app.use('/stripe', webhookRoute);
+
+app.use('/api/v1/common', emailExistRoute);
 
 app.use(errorHandler);
 

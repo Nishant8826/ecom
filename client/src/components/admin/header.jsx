@@ -4,12 +4,17 @@ import { Button } from '../ui/button'
 import { useDispatch } from 'react-redux'
 import { logout } from '@/store/authSlice'
 import { emptyCart } from '@/store/cartSlice'
+import { motion } from "motion/react"
+import { useNavigate } from 'react-router-dom'
+
 
 const AdminHeader = ({ setOpen }) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleLogout = () => {
-    dispatch(logout()).then(()=>{
+    dispatch(logout()).then(() => {
       dispatch(emptyCart());
+      navigate('/shop/home');
     })
 
   }
@@ -20,9 +25,11 @@ const AdminHeader = ({ setOpen }) => {
         <span className="sr-only">Toggle Menu</span>
       </Button>
       <div className="flex flex-1 justify-end">
-        <Button onClick={() => handleLogout()} className="inline-flex gap-2 items-center px-4 py-2 text-sm font-medium shadow rounded-md hover:bg-gray-800" >
-          <LogOut />
-        </Button>
+        <motion.button whileHover={{ scale: 1.1, transition: { duration: 0.1 } }} transition={{ duration: 0.5 }}>
+          <Button onClick={() => handleLogout()} variant="outline" size="icon" className="relative  border-primary" >
+            <LogOut />
+          </Button>
+        </motion.button>
       </div>
     </header>
   )

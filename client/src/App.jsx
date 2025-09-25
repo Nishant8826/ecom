@@ -1,8 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import './App.css'
-import AuthLayout from './components/auth/layout'
-import Login from './pages/auth/login'
-import Signup from './pages/auth/signup'
 import AdminLayout from './components/admin/layout'
 import AdminDashboard from './pages/admin/dashboard'
 import AdminFeatures from './pages/admin/features'
@@ -24,6 +21,7 @@ import StripeSuccess from './pages/shopping/success'
 import StripeCancel from './pages/shopping/cancel'
 import SearchProducts from './pages/shopping/search'
 import { fetchCart } from './store/cartSlice'
+import AdminUsers from './pages/admin/users'
 
 const App = () => {
 
@@ -39,7 +37,7 @@ const App = () => {
 
 
   useEffect(() => {
-    if (user && user._id) {
+    if (user && user._id && user.role != 'admin') {
       dispatch(fetchCart({ userId: user?._id }));
     }
   }, [user])
@@ -61,6 +59,7 @@ const App = () => {
           <Route path='features' element={<AdminFeatures />} />
           <Route path='orders' element={<AdminOrders />} />
           <Route path='products' element={<AdminProducts />} />
+          <Route path='users' element={<AdminUsers />} />
         </Route>
 
         <Route path='/shop' element={<ProtectedRoute isAuthenticated={isAuthenticated} user={user}><ShoppingLayout /></ProtectedRoute>}>
