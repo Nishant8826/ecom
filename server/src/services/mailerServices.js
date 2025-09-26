@@ -19,9 +19,9 @@ exports.sendWelcomeEmail = async (user) => {
         htmlContent = htmlContent.replace(/{{userName}}/g, user.userName).replace(/{{storeUrl}}/g, config.FrontendUrl);
 
         let info = await transporter.sendMail({
-            from: '"DevStore" <devstore@gmail.com>',
+            from: '"SwiftCart" <rnishant428@gmail.com>',
             to: user.email,
-            subject: "Welcome to NDevStore!",
+            subject: "Welcome to SwiftCart",
             html: htmlContent,
         });
 
@@ -39,7 +39,7 @@ exports.forgotPasswordOtp = async (user) => {
         htmlContent = htmlContent.replace(/{{otp}}/g, user.otp);
 
         let info = await transporter.sendMail({
-            from: '"Support" <devstore@gmail.com>',
+            from: '"Support" <rnishant428@gmail.com>',
             to: user.email,
             subject: "Password Reset OTP",
             html: htmlContent,

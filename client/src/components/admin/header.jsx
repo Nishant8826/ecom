@@ -7,7 +7,6 @@ import { emptyCart } from '@/store/cartSlice'
 import { motion } from "motion/react"
 import { useNavigate } from 'react-router-dom'
 
-
 const AdminHeader = ({ setOpen }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
