@@ -1,18 +1,16 @@
 import { motion } from "framer-motion";
 import { Github, Twitter, Instagram, Facebook } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import SwiftCart from '../../assets/SwiftCart.png'
 
 export const Footer = () => {
     return (
         <footer className=" text-primary">
-            <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div className="max-w-7xl mx-auto px-6 pt-12 pb-4 grid grid-cols-1 md:grid-cols-3 gap-10">
 
                 {/* Brand Section */}
                 <motion.div initial={{ opacity: 0, y: 100 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-                    <h2 className="text-3xl font-bold">NDevStore</h2>
-                    <p className="mt-3 text-sm text-primary-foreground/80">
-                        Ecommerce built by <span className="font-medium">Nishant Rathore</span>
-                    </p>
+                    <img src={SwiftCart} alt="SwiftCart" className="h-40" />
                 </motion.div>
 
                 {/* Links Section */}
@@ -57,10 +55,9 @@ export const Footer = () => {
                 </motion.div>
             </div>
 
-            {/* Bottom Bar */}
             <Separator className="bg-primary-foreground/20" />
-            <motion.div className="py-4 text-center text-sm text-primary-foreground/70" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
-                © {new Date().getFullYear()} NDevStore. All rights reserved.
+            <motion.div className="pb-4 text-center text-sm text-primary-foreground/70" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}>
+                © {new Date().getFullYear()} SwiftCart. All rights reserved.
             </motion.div>
         </footer>
     );

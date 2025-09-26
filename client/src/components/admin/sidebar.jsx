@@ -2,6 +2,7 @@ import { BadgeCheck, ChartNoAxesCombined, LayoutDashboard, ShoppingBasket, Users
 import { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "../ui/sheet";
+import SwiftCart from '../../assets/SwiftCart.png'
 
 const adminSidebarMenuItems = [
   {
