@@ -1,7 +1,8 @@
 const stripe = require('stripe');
 const TryCatch = require('./tryCatch');
+const config = require('../config/config');
 
-const endpointSecret = process.env.STRIPE_WEBHOOK_KEY;
+const endpointSecret = config.stripeWebhookKey;
 
 const webhooks = TryCatch(async (req, res, next) => {
     const sig = req.headers['stripe-signature'];

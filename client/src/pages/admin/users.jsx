@@ -39,7 +39,7 @@ const AdminUsers = () => {
 
     return (
         <div className="p-6">
-            <h1 className="text-3xl font-bold mb-8 text-center text-gray-600">Admin Users</h1>
+            <h1 className="text-3xl font-bold mb-8 text-center text-gray-600">All Users</h1>
 
             {loading ? (
                 <div className="space-y-4">

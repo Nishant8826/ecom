@@ -13,6 +13,7 @@ import { getCarousel } from "@/store/carouselSlice";
 import { motion, useScroll } from "motion/react"
 import { theme } from "@/config";
 import { Footer } from "@/components/common/footer";
+import ConfirmDialog from "@/components/common/ConfirmDialog";
 
 const categoriesWithIcon = [
   { id: "men", label: "Men", icon: ShirtIcon },
@@ -115,7 +116,7 @@ const ShoppingHome = () => {
       />
       <>
         <div className="flex flex-col min-h-screen">
-
+          <ConfirmDialog />
           <div className="relative w-full h-[600px] overflow-hidden">
             {carouselImageList && carouselImageList.length > 0 ?
               carouselImageList.map((item, index) => (<img src={item.image} key={item._id} className={`${index === currentSlide ? "opacity-100" : "opacity-0"} absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000`} />))

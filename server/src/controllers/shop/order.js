@@ -4,7 +4,7 @@ const OrderModel = require("../../models/Order");
 const productModel = require("../../models/Product");
 const ErrorClass = require("../../utils/ErrorClass");
 const TryCatch = require("../../utils/tryCatch");
-const stripe = require('stripe')(process.env.STRIPE_KEY);
+const stripe = require('stripe')(config.stripeKey);
 
 
 const createOrder = TryCatch(async (req, res, next) => {
