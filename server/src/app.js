@@ -23,6 +23,7 @@ const carouselRoutes = require('./routes/common/Carousel');
 const emailExistRoute = require('./routes/common/emailExist');
 const otpRouter = require('./routes/auth/otp');
 const adminUserRoutes = require('./routes/admin/users');
+const contactRoutes = require('./routes/common/contact');
 
 
 
@@ -63,6 +64,7 @@ app.use('/api/v1/order', orderRoutes);
 app.use('/stripe', webhookRoute);
 
 app.use('/api/v1/common', emailExistRoute);
+app.use('/api', contactRoutes);
 
 app.use(errorHandler);
 

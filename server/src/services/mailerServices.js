@@ -50,3 +50,23 @@ exports.forgotPasswordOtp = async (user) => {
         console.error("Error sending email:", err);
     }
 }
+
+exports.portfolioContact = async (user) => {
+    try {
+        let templatePath = path.join(__dirname, "templates/portfolioContact.template");
+        let htmlContent = fs.readFileSync(templatePath, "utf8");
+
+        htmlContent = htmlContent.replace(/{{name}}/g, user.name).replace(/{{phone}}/g, user.phone).replace(/{{email}}/g, user.email).replace(/{{message}}/g, user.message);
+
+        let info = await transporter.sendMail({
+            from: `"Portfolio Contact" <${user.email}>`,
+            to: "rnishant428@gmail.com",
+            subject: `New message from ${user.name}`,
+            html: htmlContent,
+        });
+
+        console.log("Message sent: %s", info.messageId);
+    } catch (err) {
+        console.error("Error sending email:", err);
+    }
+}
