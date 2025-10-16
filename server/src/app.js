@@ -25,16 +25,14 @@ const otpRouter = require('./routes/auth/otp');
 const adminUserRoutes = require('./routes/admin/users');
 const contactRoutes = require('./routes/common/contact');
 
-const allowedOrigins = [
-  "https://new-portfolio-mu-teal.vercel.app",
-  config.FrontendUrl
-];
-
 
 Connection();
 
 const corsOptions = {
-  origin: (origin) => allowedOrigins.includes(origin) || !origin,
+  origin: [
+  "https://new-portfolio-mu-teal.vercel.app",
+  config.FrontendUrl
+],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
