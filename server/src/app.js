@@ -26,7 +26,6 @@ const adminUserRoutes = require('./routes/admin/users');
 const contactRoutes = require('./routes/common/contact');
 
 const allowedOrigins = [
-  "http://localhost:5173",
   "https://new-portfolio-mu-teal.vercel.app",
   config.FrontendUrl
 ];
