@@ -25,15 +25,22 @@ const otpRouter = require('./routes/auth/otp');
 const adminUserRoutes = require('./routes/admin/users');
 const contactRoutes = require('./routes/common/contact');
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://new-portfolio-mu-teal.vercel.app",
+  config.FrontendUrl
+];
 
 
 Connection();
 
-app.use(cors({
-  origin: config.FrontendUrl,
-  methods: ['POST', 'GET', 'PUT', 'DELETE'],
-  credentials: true
-}));
+const corsOptions = {
+  origin: (origin) => allowedOrigins.includes(origin) || !origin,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 // Morgan logs to Winston
 app.use(morgan('combined', {
