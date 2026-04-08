@@ -50,7 +50,7 @@ app.use(cookieParser());
 app.use(express.json());
 
 // routes
-app.use('/api/v1/check', (req, res) => {
+app.get('/api/v1/check', (req, res) => {
   res.send('Hello World!');
 });
 app.use('/api/v1/auth', authRouter);
