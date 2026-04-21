@@ -34,7 +34,6 @@ const corsOptions = {
   origin: [
   "https://new-portfolio-mu-teal.vercel.app",
   config.FrontendUrl,
-  "http://localhost:5173"
 ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
