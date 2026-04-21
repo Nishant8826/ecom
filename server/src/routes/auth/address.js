@@ -16,6 +16,12 @@ const addressRouter = express.Router();
  *   post:
  *     summary: Add a new address
  *     tags: [Address]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Address'
  *     responses:
  *       200:
  *         description: Address added
@@ -57,6 +63,12 @@ addressRouter.get('/get/:userId', fetchUserAddress);
  *         required: true
  *         schema:
  *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Address'
  *     responses:
  *       200:
  *         description: Address updated successfully

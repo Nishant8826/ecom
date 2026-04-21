@@ -36,6 +36,12 @@ adminRoutes.post('/image-upload', upload.single('image'), handleImageUpload);
  *     tags: [Admin Products]
  *     security:
  *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Product'
  *     responses:
  *       200:
  *         description: Product added successfully
@@ -70,6 +76,12 @@ adminRoutes.get('/get', fetchAllProducts);
  *         required: true
  *         schema:
  *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Product'
  *     responses:
  *       200:
  *         description: Product updated successfully

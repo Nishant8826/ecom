@@ -10,6 +10,12 @@ const authRouter = express.Router();
  *   post:
  *     summary: Register a new user
  *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/User'
  *     responses:
  *       200:
  *         description: User created successfully
@@ -22,6 +28,12 @@ authRouter.post('/signup', signup);
  *   post:
  *     summary: Login a user
  *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Login'
  *     responses:
  *       200:
  *         description: User logged in successfully
