@@ -4,6 +4,8 @@ const cors = require('cors');
 const errorHandler = require('./middleware/errorHandler');
 const config = require('./config/config');
 const app = express();
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
 const morgan = require('morgan');
 const Connection = require('./config/db');
 
@@ -31,7 +33,8 @@ Connection();
 const corsOptions = {
   origin: [
   "https://new-portfolio-mu-teal.vercel.app",
-  config.FrontendUrl
+  config.FrontendUrl,
+  "http://localhost:5173"
 ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
@@ -53,6 +56,14 @@ app.use(express.json());
 app.get('/api/v1/check', (req, res) => {
   res.send('Hello World!');
 });
+
+// Swagger Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.get('/api-docs.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec);
+});
+
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/otp', otpRouter);
 app.use('/api/v1/address', addressRouter);
