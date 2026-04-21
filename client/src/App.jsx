@@ -22,6 +22,7 @@ import StripeCancel from './pages/shopping/cancel'
 import SearchProducts from './pages/shopping/search'
 import { fetchCart } from './store/cartSlice'
 import AdminUsers from './pages/admin/users'
+import ApiDocs from './pages/ApiDocs'
 
 const App = () => {
 
@@ -40,7 +41,7 @@ const App = () => {
     }
   }, [user])
 
-
+  console.log("API URL:", import.meta.env.VITE_BASE_URL);
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-gray-50 to-gray-100 text-center px-4 overflow-hidden">
@@ -86,6 +87,7 @@ const App = () => {
           <Route path='search' element={<SearchProducts />} />
         </Route>
 
+        <Route path='/api-docs' element={<ApiDocs />} />
         <Route path='unauth' element={<UnAuthorizedPage />} />
         <Route path='*' element={<NotFound />} />
 
