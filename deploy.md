@@ -348,6 +348,70 @@ pipeline {
 
 ---
 
+## 9.5 Kubernetes Cluster Setup (AWS EKS)
+
+Before Jenkins can deploy your YAMLs, you need an actual Kubernetes cluster. We will use **AWS EKS (Elastic Kubernetes Service)**. 
+*Note: With EKS, you do NOT need to manually launch Master or Worker EC2 instances like in Section 3. EKS manages the Master nodes automatically and spins up Worker nodes for you!*
+
+### A. Install Required Tools on your Cloud Workstation
+SSH into your Cloud Workstation (Bastion host) and install the AWS CLI and `eksctl`:
+```bash
+# Install AWS CLI
+sudo apt update
+sudo apt install unzip -y
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+
+# Install eksctl (The official EKS cluster creation tool)
+curl --silent --location "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz" | tar xz -C /tmp
+sudo mv /tmp/eksctl /usr/local/bin
+```
+
+### B. Configure AWS Credentials
+You need to link your Workstation to your AWS account. (You can generate Access Keys in your AWS IAM Console).
+```bash
+aws configure
+# Enter your AWS Access Key ID
+# Enter your AWS Secret Access Key
+# Default region name: e.g., us-east-1
+# Default output format: json
+```
+
+### C. Create the EKS Cluster
+> **⚠️ CRITICAL BILLING WARNING:** AWS EKS is **NOT entirely free**. While we can use Free Tier EC2 instances for the worker nodes (`t3.micro`), AWS charges **$0.10 per hour (about $72/month)** just for the EKS "Control Plane" (the Master node they manage for you). If you want a 100% free setup, you should revert to the MicroK8s setup from earlier. If you are okay with this charge for testing, remember to delete the cluster when you are done!
+
+Run this single command to create an EKS cluster named `ecommerce-cluster` with 1 Free Tier worker node. *(Warning: This takes about 15-20 minutes!)*
+```bash
+eksctl create cluster \
+  --name ecommerce-cluster \
+  --region ap-south-1 \
+  --nodegroup-name standard-workers \
+  --node-type t3.micro \
+  --nodes 1
+```
+*Note: Once this finishes, `eksctl` automatically updates your `~/.kube/config` file so your `kubectl` commands instantly work!*
+
+### D. Connect Jenkins to the EKS Cluster
+Your Jenkins pipeline needs the exact same connection details (`kubeconfig`) that you just generated to control the cluster.
+
+```bash
+# Switch to the jenkins user
+sudo su - jenkins
+
+# Configure AWS for Jenkins (Use the exact same credentials as Step B)
+aws configure
+
+# Tell AWS to pull the cluster configuration for Jenkins
+aws eks update-kubeconfig --region ap-south-1 --name ecommerce-cluster
+
+# Test the connection!
+kubectl get nodes
+exit
+```
+
+---
+
 ## 10. Kubernetes Deployment (YAMLs)
 
 Create a folder `k8s/` and add these files.

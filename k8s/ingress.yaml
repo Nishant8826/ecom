@@ -8,7 +8,7 @@ metadata:
 spec:
   rules:
   # - host: ecom.yourdomain.com
-    http:
+  - http:
       paths:
       - path: /api
         pathType: Prefix
