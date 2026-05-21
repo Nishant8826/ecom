@@ -280,6 +280,8 @@ Developer pushes to `main` branch -> Jenkins detects change -> Jenkins builds Do
 **Accessing Jenkins:**
 Since we already installed Jenkins via the script in **Section 4**, it is now running in the background. Open your browser and navigate to the Jenkins UI via `http://<Workstation-Public-IP>:8080`.
 
+> **⚠️ CRITICAL WARNING:** The Jenkins pipeline includes a "Deploy to Kubernetes" stage. This means Jenkins expects the Kubernetes YAML files to exist in your repository. **You must complete Section 10 (creating the `k8s/` files) and push them to GitHub BEFORE you run this pipeline**, otherwise the Jenkins build will crash!
+
 **Jenkinsfile (Project Root):**
 Create a file named `Jenkinsfile` at the root.
 
