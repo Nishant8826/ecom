@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  backend:
+    build: ./server
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./server/.env
+    networks:
+      - ecom-network
+
+  frontend:
+    build: 
+      context: ./client
+      args:
+        - VITE_BASE_URL=http://localhost:5000
+    ports:
+      - "5173:80" # Maps local 5173 to container's NGINX 80
+    depends_on:
+      - backend
+    networks:
+      - ecom-network
+
+networks:
+  ecom-network:
+    driver: bridge
