@@ -9,7 +9,7 @@ pipeline {
         // Let's extract the hardcoded values into dynamic variables here to make it easier for you!
         DOCKER_USERNAME = "rnishant428" // Replace with your actual DockerHub username
         // API_URL = "http://[IP_ADDRESS]" // Replace with your actual production backend URL
-        API_URL = "http://65.0.30.22" 
+        API_URL = "http://a7eb2b8411b76487781e2686906d53a2-bb28de8705f96a09.elb.ap-south-1.amazonaws.com" 
     }
     stages {
         stage('Checkout') {

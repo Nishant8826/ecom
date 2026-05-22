@@ -338,6 +338,14 @@ Your Jenkins pipeline needs permission to push your Docker images to your Docker
 
 > **⚠️ CRITICAL WARNING:** The Jenkins pipeline includes a "Deploy to Kubernetes" stage. This means Jenkins expects the Kubernetes YAML files to exist in your repository. **You must complete Section 10 (creating the `k8s/` files) and push them to GitHub BEFORE you click "Build Now" in Jenkins**, otherwise the Jenkins build will crash!
 
+**Step 4: Auto-Trigger Builds (GitHub Webhooks)**
+By default, Jenkins doesn't know when you push code to GitHub. You have to connect them using a Webhook so your pipeline runs automatically on every commit!
+1. In your **Jenkins** job, click **Configure**, scroll to **Build Triggers**, check **"GitHub hook trigger for GITScm polling"**, and click **Save**.
+2. Go to your repository on **GitHub.com** -> **Settings** -> **Webhooks** -> **Add webhook**.
+3. Set the **Payload URL** to: `http://<YOUR_BASTION_IP>:8080/github-webhook/` *(CRITICAL: You must include the trailing `/` at the end!)*
+4. Set the **Content type** to `application/json` and click **Add webhook**.
+*(Now, whenever you push code, Jenkins will automatically start building within 5 seconds!)*
+
 **Jenkinsfile (Project Root):**
 Create a file named `Jenkinsfile` at the root of your GitHub repository.
 
