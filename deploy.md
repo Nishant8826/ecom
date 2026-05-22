@@ -119,8 +119,9 @@ sudo apt install jenkins -y
 # Add Jenkins user to the Docker group (CRITICAL: Without this, Jenkins pipeline cannot run 'docker build')
 sudo usermod -aG docker jenkins
 
-# Start Jenkins (start at boot)
-sudo systemctl enable --now jenkins
+# Enable Jenkins at boot and RESTART it so it registers the new docker group permissions!
+sudo systemctl enable jenkins
+sudo systemctl restart jenkins
 ```
 
 ### C. Install kubectl & Helm (For Kubernetes)
@@ -244,6 +245,22 @@ networks:
 
 ---
 
+## 5.5 Environment Variable Configuration (CRITICAL)
+
+Before testing or deploying, you must configure your environment variables. **Localhost URLs will not work** when your app is running on a remote AWS server!
+
+### 1. Frontend URL (`FrontendUrl` in server/.env or secrets.yaml)
+This tells the Node.js backend where your frontend lives (used for CORS and Email Links).
+* **For Testing (Section 6):** In your `server/.env` file, set `FrontendUrl=http://<BASTION_PUBLIC_IP>:5173`
+* **For Production (Section 10):** In `k8s/secrets.yaml`, set `FrontendUrl` to your NGINX Ingress Load Balancer IP (or your actual domain name). *Remember to Base64 encode it!*
+
+### 2. Backend API URL (`VITE_BASE_URL` in client/.env or Jenkinsfile)
+This tells the React frontend where to send API requests.
+* **For Testing (Section 6):** In your `client/.env` and `docker-compose.yml`, change `http://localhost:5000` to `http://<BASTION_PUBLIC_IP>:5000`. If you leave it as localhost, your browser will search your physical laptop instead of the AWS server!
+* **For Production (Section 10):** You don't need to change `client/.env`. Jenkins will automatically inject the correct URL (`https://ecom.yourdomain.com/api`) during the build process using the `--build-arg` defined in the `Jenkinsfile`.
+
+---
+
 ## 6. Cloud Workstation Deployment (Zero Local Setup)
 
 Since we already installed Docker in **Section 4**, you just need to SSH into your Cloud Workstation and clone your code.
@@ -265,6 +282,13 @@ cd ecommerce
 **Verification:** Open `http://<Workstation-Public-IP>:5173` in your browser. You should see your frontend communicating with the backend!
 **Debugging:** If it fails, run `docker compose logs -f backend` to see backend errors.
 
+> **💡 Pro-Tip:** If you forget to update `VITE_BASE_URL` before running the commands above, you must rebuild the frontend container for the new variables to take effect! Run: `docker compose up -d --build frontend`
+
+**Cleanup after testing:** Once you verify the app works, shut down the containers so they don't consume memory on your Bastion server while Jenkins runs later. Run:
+```bash
+docker compose down
+```
+
 ---
 
 ## 7. CI/CD Concepts
@@ -284,10 +308,38 @@ Developer pushes to `main` branch -> Jenkins detects change -> Jenkins builds Do
 **Accessing Jenkins:**
 Since we already installed Jenkins via the script in **Section 4**, it is now running in the background. Open your browser and navigate to the Jenkins UI via `http://<Workstation-Public-IP>:8080`.
 
-> **⚠️ CRITICAL WARNING:** The Jenkins pipeline includes a "Deploy to Kubernetes" stage. This means Jenkins expects the Kubernetes YAML files to exist in your repository. **You must complete Section 10 (creating the `k8s/` files) and push them to GitHub BEFORE you run this pipeline**, otherwise the Jenkins build will crash!
+### What to do in the Jenkins UI:
+
+**Step 1: Initial Unlock (If this is your first time)**
+1. Jenkins will ask for an administrator password.
+2. Go back to your Bastion SSH terminal and run: `sudo cat /var/lib/jenkins/secrets/initialAdminPassword`
+3. Paste that password into the browser, click "Install Suggested Plugins", and create your admin account.
+
+**Step 2: Add DockerHub Credentials**
+Your Jenkins pipeline needs permission to push your Docker images to your DockerHub account.
+1. On the Jenkins Dashboard, click **Manage Jenkins** -> **Credentials**.
+2. Click on **(global)** under the Domains list, then click **Add Credentials** (top right).
+3. Set the following:
+   * **Kind:** Username with password
+   * **Username:** Your actual DockerHub username (e.g., `rnishant428`)
+   * **Password:** Your DockerHub password (or Access Token)
+   * **ID:** `dockerhub-id` *(CRITICAL: This exact ID must match the one in your Jenkinsfile!)*
+4. Click **Create**.
+
+**Step 3: Create the Pipeline Job**
+1. Go back to the Jenkins Dashboard and click **New Item**.
+2. Enter a name (like `ecommerce-pipeline`), select **Pipeline**, and click **OK**.
+3. Scroll down to the **Pipeline** section.
+4. Change the **Definition** dropdown from "Pipeline script" to **Pipeline script from SCM**.
+5. Set **SCM** to **Git**.
+6. Paste your GitHub Repository URL (e.g., `https://github.com/your-username/ecommerce.git`).
+7. Make sure the "Script Path" at the bottom says `Jenkinsfile`.
+8. Click **Save**.
+
+> **⚠️ CRITICAL WARNING:** The Jenkins pipeline includes a "Deploy to Kubernetes" stage. This means Jenkins expects the Kubernetes YAML files to exist in your repository. **You must complete Section 10 (creating the `k8s/` files) and push them to GitHub BEFORE you click "Build Now" in Jenkins**, otherwise the Jenkins build will crash!
 
 **Jenkinsfile (Project Root):**
-Create a file named `Jenkinsfile` at the root.
+Create a file named `Jenkinsfile` at the root of your GitHub repository.
 
 ```groovy
 pipeline {

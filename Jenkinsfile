@@ -43,6 +43,9 @@ pipeline {
                 // Update Kubernetes deployments with the new image tag
                 sh "sed -i 's/APP_VERSION/${APP_VERSION}/g' k8s/backend-deployment.yaml"
                 sh "sed -i 's/APP_VERSION/${APP_VERSION}/g' k8s/frontend-deployment.yaml"
+                
+                // CRITICAL: Apply the namespace first before applying files that depend on it!
+                sh "kubectl apply -f k8s/namespace.yaml"
                 sh "kubectl apply -f k8s/"
             }
         }
