@@ -81,7 +81,8 @@ Here is how traffic flows from a user to your application in production:
   - *Why:* We don't expose our actual application servers to the internet directly.
 
 ### Steps to setup:
-1. Launch 3 EC2 instances (1 Cloud Workstation/Bastion, 1 Kubernetes Master, 1 Kubernetes Worker).
+1. Launch **1 EC2 instance** (This will be your Cloud Workstation/Bastion). 
+   *(Note: You do NOT need to launch 3 instances. We will use AWS EKS in Section 9.5, which will automatically create the Kubernetes Master and Worker nodes for you!)*
 2. Create an Elastic IP (static public IP) for the Cloud Workstation.
 3. Allow port `22` (SSH) only from your IP, and ports `80`/`5000`/`5173`/`8080` for testing apps and Jenkins.
 4. **Zero Local Install Rule:** We will SSH into the Cloud Workstation and install **everything** (Docker, Git, Jenkins, `kubectl`) there. Your physical laptop remains completely clean!
@@ -114,6 +115,9 @@ echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" https://pkg.jenkins
 # Update package list and install Jenkins
 sudo apt update
 sudo apt install jenkins -y
+
+# Add Jenkins user to the Docker group (CRITICAL: Without this, Jenkins pipeline cannot run 'docker build')
+sudo usermod -aG docker jenkins
 
 # Start Jenkins (start at boot)
 sudo systemctl enable --now jenkins
@@ -308,7 +312,8 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 dir('client') {
-                    sh 'docker build --build-arg VITE_BASE_URL=https://api.yourdomain.com -t yourusername/ecom-frontend:${APP_VERSION} .'
+                    // Match the domain and path used in your Kubernetes Ingress!
+                    sh 'docker build --build-arg VITE_BASE_URL=https://ecom.yourdomain.com/api -t yourusername/ecom-frontend:${APP_VERSION} .'
                 }
             }
         }
@@ -331,7 +336,7 @@ pipeline {
 }
 ```
 
-> **Beginner Note:** Jenkins securely stores your DockerHub passwords using the "Credentials" feature, so they are never hardcoded in the script.
+> **Beginner Note:** Jenkins securely stores your DockerHub passwords using the "Credentials" feature, so they are never hardcoded in the script. **Important:** Remember to replace `yourusername` in the script with your actual DockerHub username!
 
 ---
 
@@ -379,20 +384,85 @@ aws configure
 ```
 
 ### C. Create the EKS Cluster
-> **⚠️ CRITICAL BILLING WARNING:** AWS EKS is **NOT entirely free**. While we can use Free Tier EC2 instances for the worker nodes (`t3.micro`), AWS charges **$0.10 per hour (about $72/month)** just for the EKS "Control Plane" (the Master node they manage for you). If you want a 100% free setup, you should revert to the MicroK8s setup from earlier. If you are okay with this charge for testing, remember to delete the cluster when you are done!
+> **⚠️ CRITICAL BILLING WARNING:** AWS EKS is **NOT entirely free**. AWS charges **$0.10 per hour (about $72/month)** just for the EKS "Control Plane". The node group configuration below uses `c7i-flex.large` instances which will be billed at standard on-demand rates. If you are okay with this charge for testing, remember to delete the cluster when you are done!
 
-Run this single command to create an EKS cluster named `ecommerce-cluster` with 1 Free Tier worker node. *(Warning: This takes about 15-20 minutes!)*
+First, create the EKS Control Plane (without worker nodes yet). *(Warning: This takes about 10-15 minutes!)*:
 ```bash
-eksctl create cluster \
-  --name ecommerce-cluster \
-  --region ap-south-1 \
-  --nodegroup-name standard-workers \
-  --node-type t3.micro \
-  --nodes 1
+eksctl create cluster --name=ecommerce-cluster \
+                      --region=ap-south-1 \
+                      --version=1.30 \
+                      --without-nodegroup
 ```
-*Note: Once this finishes, `eksctl` automatically updates your `~/.kube/config` file so your `kubectl` commands instantly work!*
 
-### D. Connect Jenkins to the EKS Cluster
+Next, associate an IAM OIDC Provider (required for IAM Roles for Service Accounts):
+```bash
+eksctl utils associate-iam-oidc-provider \
+    --region ap-south-1 \
+    --cluster ecommerce-cluster \
+    --approve
+```
+
+Now, create the Nodegroup to attach worker nodes:
+```bash
+eksctl create nodegroup --cluster=ecommerce-cluster \
+                       --region=ap-south-1 \
+                       --name=ecommerce-cluster-nodes \
+                       --node-type=c7i-flex.large \
+                       --nodes=2 \
+                       --nodes-min=2 \
+                       --nodes-max=2 \
+                       --node-volume-size=25 \
+                       --ssh-access \
+                       --ssh-public-key=ec2_keypair
+```
+*Note: Make sure the `ec2_keypair` exists in your AWS account.*
+
+Update your Kubectl Context manually (just to be sure):
+```bash
+aws eks update-kubeconfig --region ap-south-1 --name ecommerce-cluster
+```
+
+### D. Install AWS EBS CSI Driver
+Since our cluster might use persistent storage in AWS (EBS), install the CSI Driver:
+
+1. Add the Helm repo:
+```bash
+helm repo add aws-ebs-csi-driver https://kubernetes-sigs.github.io/aws-ebs-csi-driver
+helm repo update
+```
+
+2. Identify Node Group IAM Role:
+```bash
+aws eks describe-nodegroup \
+  --cluster-name ecommerce-cluster \
+  --nodegroup-name ecommerce-cluster-nodes \
+  --query "nodegroup.nodeRole" --output text
+```
+
+3. Attach IAM Policy (Replace `<your-node-role-name>` with the output from above):
+```bash
+aws iam attach-role-policy \
+  --role-name <your-node-role-name> \
+  --policy-arn arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy
+```
+
+4. Install the Driver via Helm:
+```bash
+helm install aws-ebs-csi-driver aws-ebs-csi-driver/aws-ebs-csi-driver \
+  --namespace kube-system
+```
+
+### E. Install Nginx Ingress Controller
+We need an Ingress Controller to manage external traffic routing to our services:
+```bash
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.11.1/deploy/static/provider/aws/deploy.yaml
+```
+Verify it and get the External IP:
+```bash
+kubectl get svc -n ingress-nginx
+```
+
+### F. Connect Jenkins to the EKS Cluster
 Your Jenkins pipeline needs the exact same connection details (`kubeconfig`) that you just generated to control the cluster.
 
 ```bash
@@ -425,6 +495,8 @@ metadata:
 ```
 
 ### 2. secrets.yaml
+> **⚠️ SECURITY WARNING:** Committing `secrets.yaml` to GitHub exposes your database passwords and API keys! Base64 is NOT encryption. In a real production setup, use a Secret Manager (like AWS Secrets Manager) or create the Kubernetes Secret directly from Jenkins using credentials. For learning purposes, ensure your repository is **PRIVATE**.
+
 *(Base64 encode your values: `echo -n "your_secret" | base64`)*
 ```yaml
 apiVersion: v1
@@ -537,6 +609,9 @@ spec:
             name: backend-service
             port:
               number: 5000
+            # Note: This routes requests like /api/users directly to the backend.
+            # Your Express app MUST have routes defined starting with /api (e.g., app.use('/api', routes)).
+            # If your app just uses /users, you need to add an NGINX rewrite-target annotation.
       - path: /
         pathType: Prefix
         backend:
@@ -617,6 +692,37 @@ When things go wrong, use these commands:
 1. Manage K8s with Helm.
 2. Write Terraform to create your AWS VPCs and EC2s automatically.
 3. Implement Prometheus Alertmanager (e.g., get Slack pings when DB goes down).
+
+***
+
+## 16. Cleanup (Avoiding AWS Charges)
+
+When you are completely finished testing your CI/CD pipeline and want to tear down the infrastructure to stop getting billed for the AWS EKS Control Plane ($0.10/hour), you must destroy the cluster properly. 
+
+**Do NOT just delete the EC2 instances from the AWS Console!** EKS provisions Load Balancers, Security Groups, VPCs, and NAT Gateways that will be left behind and continue charging you. 
+
+Follow these steps in order to ensure everything is deleted cleanly:
+
+### 1. Delete Kubernetes Ingress (Load Balancers)
+*Load balancers are provisioned by AWS when you deploy an ingress. Deleting the cluster directly can sometimes leave them orphaned. Delete them via `kubectl` first.*
+```bash
+kubectl delete ingress --all --all-namespaces
+```
+
+### 2. Delete Persistent Volume Claims (EBS Volumes)
+*EBS volumes can also sometimes persist if the cluster is aggressively deleted.*
+```bash
+kubectl delete pvc --all --all-namespaces
+```
+
+### 3. Delete the EKS Cluster
+Run this command from your Cloud Workstation terminal to cleanly delete the entire cluster and all its associated resources:
+```bash
+eksctl delete cluster --name=ecommerce-cluster --region=ap-south-1
+```
+*(Note: It takes about 15 minutes for AWS to carefully delete everything. Wait for the command to fully finish!)*
+
+Once the cluster is deleted, you can safely go into your AWS EC2 Console and terminate your Bastion Host (Cloud Workstation).
 
 ***
 

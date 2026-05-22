@@ -17,6 +17,10 @@ spec:
             name: backend-service
             port:
               number: 5000
+            # Note: This routes requests like /api/users directly to the backend.
+            # Your Express app MUST have routes defined starting with /api (e.g., app.use('/api', routes)).
+            # If your app just uses /users, you need to add an NGINX rewrite-target annotation:
+            # nginx.ingress.kubernetes.io/rewrite-target: /$2
       - path: /
         pathType: Prefix
         backend:
