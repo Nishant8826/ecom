@@ -2,13 +2,13 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: backend-monitor
-  namespace: ecom-production
+  namespace: monitoring # Prometheus Operator usually only looks in its own namespace
   labels:
-    # Important: In kube-prometheus-stack, the prometheus instance often only
-    # scrapes ServiceMonitors with specific labels like release: prometheus.
-    # Adjust this label if your prometheus installation requires a different one.
     release: prometheus 
 spec:
+  namespaceSelector:
+    matchNames:
+      - ecom-production
   selector:
     matchLabels:
       app: backend
