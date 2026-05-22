@@ -100,7 +100,6 @@ const ShoppingHome = () => {
 
   return (
     <>
-          <h1>hello checking CI/CD</h1>
       <motion.div
         id="scroll-indicator"
         style={{
