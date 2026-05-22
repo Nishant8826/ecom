@@ -100,6 +100,7 @@ const ShoppingHome = () => {
 
   return (
     <>
+    <h1>Hello From CI/CD Jenkins</h1>
       <motion.div
         id="scroll-indicator"
         style={{
