@@ -12,12 +12,17 @@ spec:
     metadata:
       labels:
         app: backend
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "5000"
+        prometheus.io/path: "/metrics"
     spec:
       containers:
       - name: backend
         image: rnishant428/ecom-backend:APP_VERSION
         ports:
-        - containerPort: 5000
+        - name: "5000"
+          containerPort: 5000
         envFrom:
         - secretRef: # Inject all secrets as Env Vars
             name: ecom-secrets

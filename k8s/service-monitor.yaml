@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: backend-monitor
+  namespace: ecom-production
+  labels:
+    # Important: In kube-prometheus-stack, the prometheus instance often only
+    # scrapes ServiceMonitors with specific labels like release: prometheus.
+    # Adjust this label if your prometheus installation requires a different one.
+    release: prometheus 
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  endpoints:
+  - port: "5000"
+    path: /metrics
+    interval: 15s

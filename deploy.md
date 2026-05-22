@@ -696,6 +696,25 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 helm install prometheus prometheus-community/kube-prometheus-stack -n monitoring --create-namespace
 ```
 
+### Application Metrics & Grafana Dashboards
+
+Now that Prometheus is running, we need to visualize our application.
+We have instrumented the Node.js backend using `prom-client` and exposed a `/metrics` endpoint. 
+To tell Prometheus to scrape this endpoint, we apply the `ServiceMonitor` and annotations:
+
+```bash
+kubectl apply -f k8s/service-monitor.yaml
+```
+
+**Adding Dashboards in Grafana:**
+1. Log into your Grafana dashboard (you can get the password from the `prometheus-grafana` Kubernetes secret, and port-forward the grafana service).
+2. Go to **Dashboards -> New -> Import**.
+3. We will import an industry-standard dashboard. Enter the ID `11159` (NodeJS Application Dashboard) into the "Import via grafana.com" field and click **Load**.
+4. Select the "Prometheus" data source from the dropdown and click **Import**.
+5. You will now see beautiful visualizations of your Backend's CPU, Memory usage, Event Loop lag, and HTTP Request durations (latency).
+
+*For Kubernetes Cluster monitoring, you can also import Dashboard ID `315` or `15661`!*
+
 ---
 
 ## 12. Production Best Practices
